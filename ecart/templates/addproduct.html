@@ -1,0 +1,276 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v4.1.1">
+    <title>Admin page</title>
+
+    <!-- admin dashboard -->
+	<link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/dashboard/">
+	<!-- Bootstrap core CSS -->
+	<link href="{% static 'assets/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+	<!-- Custom styles for this template -->
+	<link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+    <!-- admin dashboard -->
+    <!-- add product -->
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" id="bootstrap-css">
+    <!-- add product -->
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+  
+  </head>
+  <body>
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">Adminpanel</a>
+  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+    <ul class="navbar-nav px-3">
+    <li class="nav-item text-nowrap">
+      <a class="nav-link" href="{{ 'adminout' }}">Signout</a>
+    </li>
+  </ul>
+</nav>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <div class="sidebar-sticky pt-3">
+        <ul class="nav flex-column">
+          <!-- <li class="nav-item">
+            <a class="nav-link active" href="#">
+              <span data-feather="home"></span>
+              Dashboard <span class="sr-only">(current)</span>
+            </a>
+          </li> -->
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="file"></span>
+              Orders
+            </a>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="shopping-cart"></span>
+              Products
+            </a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="users"></span>
+              Customers
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="bar-chart-2"></span>
+              Reports
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              <span data-feather="layers"></span>
+              Integrations
+            </a>
+          </li> -->
+        </ul>
+
+      </div>
+    </nav>
+
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
+        <form class="form-horizontal" action="" method="POST">
+            {% csrf_token %}
+            <fieldset>
+        
+                <!-- Form Name -->
+                <legend>Product Details</legend>
+        
+                <!-- Text input-->
+                <div class="control-group">
+                    <label class="control-label" for="full_name">Product Name</label>
+                    <div class="controls">
+                        <input id="full_name" name="name" placeholder="Productname" class="input-xlarge" type="text">
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="course">Product Type</label>
+                    <div class="controls">
+                        <select id="course" name="category" class="input-xlarge">
+                            <option>Select Type</option>
+                            <option>Laptop</option>
+                            <option>Smartphone</option>
+                            <option>Accessories</option>
+                            <option>PC</option>
+                        </select>
+                    </div>
+                </div>
+        
+                <!-- Text input-->
+                <div class="control-group">
+                    <label class="control-label">Product_Quantity</label>
+                    <div class="controls">
+                        <input name="product_quantity" type="text">
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Product Features</label>
+                    <div class="controls">
+                        <textarea id="Address" name="features"></textarea>
+                    </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label">Product Description</label>
+                  <div class="controls">
+                      <textarea id="Address" name="description"></textarea>
+                  </div>
+              </div>
+              
+                <!-- Text input-->
+                <div class="control-group">
+                    <label class="control-label">Price</label>
+                    <div class="controls">
+                        <input id="mother_name" name="oldprice" placeholder="Old_price" class="input-xlarge" type="text" >
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="mother_name">After discount </label>
+                    <div class="controls">
+                        <input id="mother_name" name="newprice" placeholder="New_price" class="input-xlarge" type="text" >
+                        <p class="help-block"> </p>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                  <label class="control-label" for="mother_name">Main Photo </label>
+                  <div class="controls">
+                      <input id="mother_name" name="image" placeholder="image url" class="input-xlarge" type="text" >
+                      <p class="help-block"> </p>
+                  </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="mother_name">Photo 1</label>
+                <div class="controls">
+                    <input id="mother_name" name="imagepr1" placeholder="image url" class="input-xlarge" type="text" >
+                    <p class="help-block"> </p>
+                </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="mother_name">Photo 2</label>
+              <div class="controls">
+                  <input id="mother_name" name="imagepr2" placeholder="image url" class="input-xlarge" type="text" >
+                  <p class="help-block"> </p>
+              </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="mother_name">Photo 3</label>
+            <div class="controls">
+                <input id="mother_name" name="imagepr3" placeholder="image url" class="input-xlarge" type="text" >
+                <p class="help-block"> </p>
+            </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="mother_name">Photo 4</label>
+          <div class="controls">
+              <input id="mother_name" name="imagepr4" placeholder="image url" class="input-xlarge" type="text" >
+              <p class="help-block"> </p>
+          </div>
+      </div>
+                <!-- File Button -->
+                <!-- <div class="control-group">
+                    <label class="control-label" for="photo">Product Photo</label>
+                    <div class="controls">
+                        <input id="photo" name="image" class="input-file" type="file">
+                    </div>
+                </div> -->
+        
+                <!-- Button -->
+                <div class="control-group">
+                    <label class="control-label" for="submit"></label>
+                    <div class="controls">
+                        <button type="submit" class="btn btn-info btn-lg" data-target="#myModal">Save</button>
+        
+                    </div>
+                    <div id="myModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+        
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-md-3 ml-auto">
+        
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-md-3 ml-auto">
+                                                <p>saved successfully <span style="color: blue; "><i
+                                                            class="fas fa-check indigo-text pr-3"></i></span>
+                                                </p>
+        
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                        
+                            </div>
+                            <div class="modal-footer">
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-primary " data-dismiss="modal">ok</button>
+                                </div>
+                            </div>
+                        </div>
+        
+                    </div>
+                </div>
+        
+        
+                </div>
+            </fieldset>
+        </form>
+
+    <!-- admin dashboard -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script> 
+	<script src="{% static 'js/dashboard.js' %}"></script></body>
+    <!-- admin dashboard -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!------ product add ---------->
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://kit.fontawesome.com/c0d12c7483.js" crossorigin="anonymous"></script>
+	
+</body>
+</html>
