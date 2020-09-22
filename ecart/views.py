@@ -3,6 +3,7 @@ from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.cache import cache_control
 from .models import Product
 # Create your views here.
@@ -14,14 +15,15 @@ def index(request):
 
 
 def logout(request):
-    auth.logout(request)
-    return redirect(index)
+    response =redirect(index)
+    response.delete_cookie('user')
+    return response
 
 
 
 def login(request):
-    if request.user.is_authenticated:
-        return redirect('/')
+    if request.COOKIES.get('user'):
+        return render(request,'index.html')
 
     elif request.method=="POST":
         username = request.POST['username']
@@ -29,8 +31,9 @@ def login(request):
         user = auth.authenticate(username=username, password=password)
 
         if user is not None:
-            auth.login(request,user)
-            return redirect(index)
+            response = redirect(index)
+            response.set_cookie('user','user')
+            return response
         else:
             messages.error(request, '😢 Wrong username/password!')
             return redirect('login')
@@ -40,10 +43,7 @@ def login(request):
 
 
 def register(request):
-    if request.user.is_authenticated:
-        return redirect(index)
-
-    elif request.method == "POST":
+    if request.method == "POST":
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
@@ -102,8 +102,12 @@ def adminlogin(request):
 
 
 def adminproduct(request):
-    productitems = Product.objects.all()
-    return render(request, 'adminproduct.html', {'productitems' : productitems})
+    if request.session.has_key('password'):
+        password = request.session['password']
+        productitems = Product.objects.all()
+        return render(request, 'adminproduct.html', {'productitems' : productitems})
+    else:
+        return render(request,'adminlogin.html')
 
 
 
