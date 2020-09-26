@@ -17,7 +17,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = Path.joinpath(BASE_DIR,"templates")
 STATIC_DIR = Path.joinpath(BASE_DIR, "static")
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -128,3 +127,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS =[
     STATIC_DIR,
 ]
+
+
+

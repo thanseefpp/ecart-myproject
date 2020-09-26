@@ -9,9 +9,22 @@ from .models import Product
 # Create your views here.
 
 
+
 def index(request):
     productitems = Product.objects.all()
     return render(request, 'index.html', {'productitems' : productitems})
+
+
+
+
+def checkout(request):
+    return render(request, 'checkout.html')
+
+
+
+def cart(request):
+    return render(request, 'productcart.html')
+
 
 
 def logout(request):
@@ -68,7 +81,7 @@ def register(request):
         return render(request, 'register.html')
 
 
-
+#admin 
 
 def adminout(request):
     if request.session.has_key('password'):
@@ -78,12 +91,12 @@ def adminout(request):
     return redirect(adminlogin)
 
 
-
+#admin 
 
 def adminlogin(request):
     if request.session.has_key('password'):
         password = request.session['password']
-        return redirect('adminproduct')
+        return redirect('adminds')
 
     elif request.method=="POST":
         username = request.POST['username']
@@ -91,7 +104,7 @@ def adminlogin(request):
 
         if username == 'thanseef' and password == '1234':
             request.session['password'] = password
-            return redirect('adminproduct')
+            return redirect('adminds')
 
         else:
             messages.error(request, '😢 Wrong username/password!')
@@ -99,15 +112,46 @@ def adminlogin(request):
     else:
         return render(request,'adminlogin.html')
 
+#admin 
 
-
-def adminproduct(request):
+def adminds(request):
     if request.session.has_key('password'):
         password = request.session['password']
         productitems = Product.objects.all()
-        return render(request, 'adminproduct.html', {'productitems' : productitems})
+        return render(request, 'admindashboard.html', {'productitems':productitems})
     else:
         return render(request,'adminlogin.html')
+
+#admin 
+
+def orders(request):
+    if request.session.has_key('password'):
+        password = request.session['password']
+        productitems = Product.objects.all()
+        return render(request,'order.html', {'productitems' : productitems})
+    else:
+        return render(request,'order.html')
+
+
+#admin 
+
+def adminpd(request):
+    if request.session.has_key('password'):
+        password = request.session['password']
+        productitems = Product.objects.all()
+        return render(request,'products.html', {'productitems' : productitems})
+    else:
+        return render(request,'products.html')
+
+
+
+# def adminproduct(request):
+#     if request.session.has_key('password'):
+#         password = request.session['password']
+#         productitems = Product.objects.all()
+#         return render(request, 'adminproduct.html', {'productitems' : productitems})
+#     else:
+#         return render(request,'adminlogin.html')
 
 
 
@@ -116,13 +160,15 @@ def productview(request,id):
     return render(request, 'product.html',{'prodview' : prodview})
 
 
+#admin 
 
 def delete(request,id):
     product= Product.objects.get(id=id)
     product.delete()
-    return redirect('adminproduct')
+    return redirect('adminpd')
 
 
+#admin 
 
 def addproduct(request):
     if request.method == "POST":
@@ -140,11 +186,12 @@ def addproduct(request):
         description = request.POST['description']
         prod = Product(description=description,imagepr4=imagepr4,imagepr3=imagepr3,imagepr2=imagepr2,imagepr1=imagepr1,image=image,name=name,product_quantity=product_quantity,category=category,features=features,oldprice=oldprice,newprice=newprice)
         prod.save();
-        return redirect('adminproduct')
+        return redirect('adminpd')
     else:
-        return render(request, 'addproduct.html')
+        return render(request, 'productadd.html')
 
 
+#admin 
 
 def update(request,id):
     product=Product.objects.get(id=id)
@@ -162,10 +209,10 @@ def update(request,id):
         product.imagepr4=request.POST['imagepr4']
         product.description = request.POST['description']
         product.save()
-        return redirect(adminproduct)
+        return redirect(adminpd)
 
     else:
-        return render(request, 'updateproduct.html', {'product':product})
+        return render(request, 'updatepd.html', {'product':product})
 
 
 
