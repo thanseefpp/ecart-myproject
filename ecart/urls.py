@@ -15,8 +15,9 @@ urlpatterns = [
     path('adminpd',views.adminpd,name='adminpd'),
     path('adminds',views.adminds,name='adminds'),
     path('orders',views.orders,name='orders'),
-    path('checkout',views.checkout,name='checkout'),
-    path('cart',views.cart,name='cart'),
+    path('checkout/',views.checkout,name='checkout'),
+    path('cart/',views.cart,name='cart'),
+    path('update_item/',views.updateItem,name='update_item'),
 ]
 
 

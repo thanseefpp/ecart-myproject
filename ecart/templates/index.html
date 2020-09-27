@@ -34,22 +34,22 @@
 								<div id="tab1" class="tab-pane active">
 									<div class="products-slick" data-nav="#slick-nav-1">
 										<!-- product -->
-										{% for items in productitems %}
+										{% for product in productitems %}
 										<div class="product">
 											<div class="product-img">
-												<img src="{{items.image}}" alt="">
+												<img src="{{product.image}}" alt="">
 												<div class="product-label">
 													<span class="new">NEW</span>
 												</div>
 											</div>
 											<div class="product-body">
-												<p class="product-category">{{items.category}}</p>
-												<h3 class="product-name"><a href="{% url 'productview' items.id %}">{{items.name}}</a></h3>
-												<h4 class="product-price">${{items.newprice}}<del class="product-old-price">(${{items.oldprice}})</del></h4>
+												<p class="product-category">{{product.category}}</p>
+												<h3 class="product-name"><a href="{% url 'productview' product.id %}">{{product.name}}</a></h3>
+												<h4 class="product-price">${{product.newprice}}<del class="product-old-price">(${{product.oldprice}})</del></h4>
 				
 											</div>
 											<div class="add-to-cart">
-												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<button data-product="{{product.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
 										<!-- /product -->
@@ -147,21 +147,21 @@
 								<div id="tab2" class="tab-pane fade in active">
 									<div class="products-slick" data-nav="#slick-nav-2">
 										<!-- product -->
-										{% for items in productitems %}
+										{% for product in productitems %}
 										<div class="product">
 											<div class="product-img">
-												<img src="{{items.image}}" alt="">
+												<img src="{{product.image}}" alt="">
 												<div class="product-label">
 													<span class="sale">-30%</span>
 												</div>
 											</div>
 											<div class="product-body">
-												<p class="product-category">{{items.category}}</p>
-												<h3 class="product-name"><a href="{% url 'productview' items.id %}">{{items.name}}</a></h3>
-												<h4 class="product-price">${{items.newprice}}<del class="product-old-price">(${{items.oldprice}})</del></h4>
+												<p class="product-category">{{product.category}}</p>
+												<h3 class="product-name"><a href="{% url 'productview' product.id %}">{{product.name}}</a></h3>
+												<h4 class="product-price">${{product.newprice}}<del class="product-old-price">(${{product.oldprice}})</del></h4>
 											</div>
 											<div class="add-to-cart">
-												<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<button data-product="{{product.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
 										{% endfor %}
@@ -199,17 +199,17 @@
 						<div class="products-widget-slick" data-nav="#slick-nav-3">
 							<div>
 								<!-- product widget -->
-								{% for items in productitems %}
+								{% for product in productitems %}
 								{% if forloop.first %}
 
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{items.image}}" alt="">
+										<img src="{{product.image}}" alt="">
 									</div>
 									<div class="product-body">
-										<p class="product-category">{{items.category}}</p>
-										<h3 class="product-name"><a href="{% url 'productview' items.id %}">{{items.name}}</a></h3>
-										<h4 class="product-price">${{items.newprice}}<del class="product-old-price">(${{items.oldprice}})</del></h4>
+										<p class="product-category">{{product.category}}</p>
+										<h3 class="product-name"><a href="{% url 'productview' product.id %}">{{product.name}}</a></h3>
+										<h4 class="product-price">${{product.newprice}}<del class="product-old-price">(${{product.oldprice}})</del></h4>
 									</div>
 								</div>
 									{% endif %}
@@ -231,17 +231,17 @@
 						<div class="products-widget-slick" data-nav="#slick-nav-4">
 							<div>
 								<!-- product widget -->
-								{% for items in productitems %}
+								{% for product in productitems %}
 								{% if forloop.first %}
 
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{items.image}}" alt="">
+										<img src="{{product.image}}" alt="">
 									</div>
 									<div class="product-body">
-										<p class="product-category">{{items.category}}</p>
-										<h3 class="product-name"><a href="{% url 'productview' items.id %}">{{items.name}}</a></h3>
-										<h4 class="product-price">${{items.newprice}}<del class="product-old-price">(${{items.oldprice}})</del></h4>
+										<p class="product-category">{{product.category}}</p>
+										<h3 class="product-name"><a href="{% url 'productview' product.id %}">{{product.name}}</a></h3>
+										<h4 class="product-price">${{product.newprice}}<del class="product-old-price">(${{product.oldprice}})</del></h4>
 									</div>
 								</div>
 									{% endif %}
@@ -265,17 +265,17 @@
 						<div class="products-widget-slick" data-nav="#slick-nav-5">
 							<div>
 								<!-- product widget -->
-								{% for items in productitems %}
+								{% for product in productitems %}
 								{% if forloop.first %}
 
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{items.image}}" alt="">
+										<img src="{{product.image}}" alt="">
 									</div>
 									<div class="product-body">
-										<p class="product-category">{{items.category}}</p>
-										<h3 class="product-name"><a href="{% url 'productview' items.id %}">{{items.name}}</a></h3>
-										<h4 class="product-price">${{items.newprice}}<del class="product-old-price">(${{items.oldprice}})</del></h4>
+										<p class="product-category">{{product.category}}</p>
+										<h3 class="product-name"><a href="{% url 'productview' product.id %}">{{product.name}}</a></h3>
+										<h4 class="product-price">${{product.newprice}}<del class="product-old-price">(${{product.oldprice}})</del></h4>
 									</div>
 								</div>
 									{% endif %}
@@ -285,7 +285,6 @@
 							</div>
 						</div>
 					</div>
-
 				</div>
 				<!-- /row -->
 			</div>

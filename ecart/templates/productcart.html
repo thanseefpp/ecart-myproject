@@ -35,13 +35,13 @@
                             <p></p>
                         </td>
                         <td class="cart_price">
-                            <p>{{item.product.newprice}}</p>
+                            <p>${{item.product.newprice}}</p>
                         </td>
                         <td class="cart_quantity">
                             <div class="cart_quantity_button">
-                                <a class="cart_quantity_up" href=""> + </a>
+                                <a data-product={{item.product.id}} data-action="add" class="cart_quantity_up update-cart" href=""> + </a>
                                 <input class="cart_quantity_input" type="text" name="quantity" value="{{item.quantity}}" autocomplete="off" size="2">
-                                <a class="cart_quantity_down" href=""> - </a>
+                                <a data-product={{item.product.id}} data-action="remove" class="cart_quantity_down update-cart" href=""> - </a>
                             </div>
                         </td>
                         <td class="cart_total">
@@ -53,7 +53,6 @@
                     </tr>
                     {% endfor %}
                 </tbody>
-                
             </table>
         </div>
         <div style="padding-left: 1000px;">
@@ -61,8 +60,8 @@
             <h5 style="padding-left: 2px;"><strong>{{order.get_cart_total}} </strong>: Total Price</h5>
         </div>
         <div style="padding-left: 856px;padding-top: 25px;">
-            <a href="{{'/'}}" class="primary-btn order-submit">Continue Shope</a>
-            <a href="#" class="primary-btn order-submit">Place order</a>
+            <a href="{{index}}" class="primary-btn order-submit">Continue Shope</a>
+            <a href="{% url 'checkout' %}" class="primary-btn order-submit">Place order</a>
         </div>
     </div>
 </section> <!--/#cart_items-->
