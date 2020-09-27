@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.cache import cache_control
-from .models import Product
+from .models import *
 # Create your views here.
 
 
@@ -18,25 +18,33 @@ def index(request):
 
 
 def checkout(request):
+    Product.objects.all()
     return render(request, 'checkout.html')
 
 
 
 def cart(request):
-    return render(request, 'productcart.html')
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+    else:
+        items= []
+        order = {'get_cart_total':0, 'get_cart_items':0}
+    context = {'items':items,'order':order}
+    return render(request, 'productcart.html', context)
 
 
 
 def logout(request):
-    response =redirect(index)
-    response.delete_cookie('user')
-    return response
+    auth.logout(request)
+    return redirect(index)
 
 
 
 def login(request):
-    if request.COOKIES.get('user'):
-        return render(request,'index.html')
+    if request.user.is_authenticated:
+        return redirect('index')
 
     elif request.method=="POST":
         username = request.POST['username']
@@ -44,9 +52,8 @@ def login(request):
         user = auth.authenticate(username=username, password=password)
 
         if user is not None:
-            response = redirect(index)
-            response.set_cookie('user','user')
-            return response
+            auth.login(request,user)
+            return redirect(index)
         else:
             messages.error(request, '😢 Wrong username/password!')
             return redirect('login')
@@ -56,7 +63,10 @@ def login(request):
 
 
 def register(request):
-    if request.method == "POST":
+    if request.user.is_authenticated:
+        return redirect(index)
+
+    elif request.method == "POST":
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
