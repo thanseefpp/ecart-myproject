@@ -7,16 +7,104 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.cache import cache_control
 from django.http import JsonResponse
 import json
-
+import datetime
+import requests
 from .models import *
 
 # Create your views here.
+
+def mobile(request):
+    if request.method=='POST':
+        number = request.POST['number']
+        user=User.objects.get(last_name=number)
+        print(user)
+
+        if user:
+            username = user.username
+            password=user.first_name
+            request.session['username'] =  username
+            request.session['password'] = password
+            
+
+            url = "https://d7networks.com/api/verifier/send"
+            number=str(91) + number
+            
+            payload = {'mobile': number,
+            'sender_id': 'SMSINFO',
+            'message': 'Your otp code is {code}',
+            'expiry': '900'}
+            files = [
+
+            ]
+            headers = {
+            'Authorization': 'Token 0d21f1e3cb977b24ebd925ec71d3fec0cb0a41f3'
+            }
+
+            response = requests.request("POST", url, headers=headers, data = payload, files = files)
+
+            print(response.text.encode('utf8'))
+            data=response.text.encode('utf8')
+            datadict=json.loads(data.decode('utf-8'))
+
+            id=datadict['otp_id']
+            status=datadict['status']
+            print('id:',id)
+            request.session['id'] = id
+            return render(request,'otp.html')
+
+        else:
+            messages.error(request,'number not registerd')
+            return render(request,'mobile.html')
+
+    return render(request, 'mobile.html')
+
+# {"otp_id":"6939d5de-8517-4788-b556-054404497e8d","status":"open","expiry":900}'          
+    
+
+
+def otp(request):
+    if request.method == 'POST':
+        otp=request.POST['otp']
+       
+        id=request.session['id']
+        url = "https://d7networks.com/api/verifier/verify"
+
+        payload = {'otp_id': id,
+        'otp_code': otp}
+        files = [
+
+        ]
+        headers = {
+        'Authorization': 'Token 0d21f1e3cb977b24ebd925ec71d3fec0cb0a41f3'
+        }
+
+        response = requests.request("POST", url, headers=headers, data = payload, files = files)
+
+        print(response.text.encode('utf8'))
+        data=response.text.encode('utf8')
+        datadict=json.loads(data.decode('utf-8'))
+        status=datadict['status']
+        
+        if status=='success':
+            username = request.session['username']   
+            password =  request.session['password']
+            dic=authenticate(username=username,password=password)
+            auth.login(request,dic)
+            return redirect(index)
+
+        else:
+            messages.error(request,'Incorrect OTP')
+            return render(request,'otp.html')
+
+    return render(request,'otp.html')
 
 
 
 def index(request):
     if request.user.is_authenticated:
-        customer = request.user.customer
+        user=request.user
+        name=request.user.email
+        customer,created = Customer.objects.get_or_create(user=user,name=name)
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
@@ -28,8 +116,6 @@ def index(request):
     productitems = Product.objects.all()
     context = {'productitems' : productitems, 'cartItems':cartItems}
     return render(request, 'index.html', context)
-
-
 
 
 def checkout(request):
@@ -90,10 +176,39 @@ def updateItem(request):
 	return JsonResponse('Item was added', safe=False)
 
 
+def processOrder(request):
+    transaction_id = datetime.datetime.now().timestamp()
+    data = json.loads(request.body)
+
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        total = float(data['form']['total'])
+        order.transaction_id = transaction_id
+
+        if total == order.get_cart_total:
+            order.complete = True
+        order.save()
+
+        if order.shipping == True:
+            ShippingAddress.objects.create(
+                customer=customer,
+                order=order,
+                address=data['shipping']['address'],
+                city=data['shipping']['city'],
+                state=data['shipping']['state'],
+                zipcode=data['shipping']['zipcode'],
+            )
+    else:
+        print('User is not logged in..')
+    return JsonResponse('Payment complete', safe=False)
+
+
 
 def logout(request):
     auth.logout(request)
     return redirect(index)
+
 
 
 def login(request):
@@ -123,9 +238,10 @@ def register(request):
     elif request.method == "POST":
         username = request.POST['username']
         email = request.POST['email']
+        mobile = request.POST['mobile']
         password = request.POST['password']
         confirmpassword = request.POST['confirmpassword']
-        dicti = {"username":username,"email":email}
+        dicti = {"username":username,"email":email,"mobile":mobile}
         if password == confirmpassword:
             if User.objects.filter(email=email).exists():
                 messages.error(request,'Email already taken')
@@ -134,7 +250,7 @@ def register(request):
                 messages.error(request,"username already taken") 
                 return render(request,'register.html',dicti)
             else:
-                user = User.objects.create_user(username=username, password=password, email=email)
+                user = User.objects.create_user(username=username, password=password, email=email, last_name=mobile, first_name=password)
                 user.save();
                 print("USER CREATED")
                 return redirect(login)

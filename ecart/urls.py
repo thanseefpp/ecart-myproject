@@ -7,7 +7,7 @@ urlpatterns = [
     path('register',views.register,name='register'),
     path('admin/',views.adminlogin,name='adminlogin'),
     path('adminout',views.adminout,name = 'adminout'),
-    path('logout',views.logout,name='logout'),
+    path('logout/',views.logout,name='logout'),
     path('addproduct',views.addproduct, name = 'addproduct'),
     path("delete/<int:id>/",views.delete,name="delete" ),
     path("update/<int:id>/",views.update,name='update'),
@@ -18,6 +18,10 @@ urlpatterns = [
     path('checkout/',views.checkout,name='checkout'),
     path('cart/',views.cart,name='cart'),
     path('update_item/',views.updateItem,name='update_item'),
+    path('process_order/',views.processOrder,name='process_order'),
+    path('mobile/',views.mobile,name='mobile'),
+    path('otp/',views.otp,name='otp'),
+    
 ]
 
 
