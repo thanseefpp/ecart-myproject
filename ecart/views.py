@@ -5,11 +5,14 @@ from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.cache import cache_control
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
 import json
 import datetime
 import requests
 from .models import *
+from . utils import cookieCart
 
 # Create your views here.
 
@@ -58,8 +61,6 @@ def mobile(request):
 
     return render(request, 'mobile.html')
 
-# {"otp_id":"6939d5de-8517-4788-b556-054404497e8d","status":"open","expiry":900}'          
-    
 
 
 def otp(request):
@@ -109,12 +110,15 @@ def index(request):
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
-        items= []
-        order = {'get_cart_total':0, 'get_cart_items':0, 'shipping':False}
-        cartItems = order['get_cart_items'] 
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
 
     productitems = Product.objects.all()
-    context = {'productitems' : productitems, 'cartItems':cartItems}
+    Laptop = Product.objects.filter(category='Laptop')
+    Smartphone = Product.objects.filter(category='Smartphone')
+    Accessories = Product.objects.filter(category='Accessories')
+    pc = Product.objects.filter(category='pc')
+    context = {'productitems' : productitems, 'cartItems':cartItems, 'Laptop':Laptop, 'Smartphone':Smartphone, 'Accessories':Accessories, 'pc':pc}
     return render(request, 'index.html', context)
 
 
@@ -125,9 +129,10 @@ def checkout(request):
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
-        items= []
-        order = {'get_cart_total':0, 'get_cart_items':0, 'shipping':False}
-        cartItems = order['get_cart_items']
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
+        order = cookieData['order']
+        items = cookieData['items']
 
     context = {'items':items,'order':order, 'cartItems':cartItems}
     return render(request, 'checkout.html', context)
@@ -141,10 +146,11 @@ def cart(request):
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
-        items= []
-        order = {'get_cart_total':0, 'get_cart_items':0, 'shipping':False}
-        cartItems = order['get_cart_items']
-
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
+        order = cookieData['order']
+        items = cookieData['items']
+        
     context = {'items':items,'order':order, 'cartItems':cartItems}
     return render(request, 'productcart.html', context)
 
@@ -238,10 +244,10 @@ def register(request):
     elif request.method == "POST":
         username = request.POST['username']
         email = request.POST['email']
-        mobile = request.POST['mobile']
+        number = request.POST['number']
         password = request.POST['password']
         confirmpassword = request.POST['confirmpassword']
-        dicti = {"username":username,"email":email,"mobile":mobile}
+        dicti = {"username":username,"email":email,"number":number}
         if password == confirmpassword:
             if User.objects.filter(email=email).exists():
                 messages.error(request,'Email already taken')
@@ -250,10 +256,45 @@ def register(request):
                 messages.error(request,"username already taken") 
                 return render(request,'register.html',dicti)
             else:
-                user = User.objects.create_user(username=username, password=password, email=email, last_name=mobile, first_name=password)
+                user = User.objects.create_user(username=username, password=password, email=email, last_name=number, first_name=password)
                 user.save();
                 print("USER CREATED")
-                return redirect(login)
+                number = request.POST['number']
+                user=User.objects.get(last_name=number)
+                print(user)
+
+                if user:
+                    username = user.username
+                    password=user.first_name
+                    request.session['username'] =  username
+                    request.session['password'] = password
+                    
+
+                    url = "https://d7networks.com/api/verifier/send"
+                    number=str(91) + number
+                    
+                    payload = {'mobile': number,
+                    'sender_id': 'SMSINFO',
+                    'message': 'Your otp code is {code}',
+                    'expiry': '900'}
+                    files = [
+
+                    ]
+                    headers = {
+                    'Authorization': 'Token 0d21f1e3cb977b24ebd925ec71d3fec0cb0a41f3'
+                    }
+
+                    response = requests.request("POST", url, headers=headers, data = payload, files = files)
+
+                    print(response.text.encode('utf8'))
+                    data=response.text.encode('utf8')
+                    datadict=json.loads(data.decode('utf-8'))
+
+                    id=datadict['otp_id']
+                    status=datadict['status']
+                    print('id:',id)
+                    request.session['id'] = id
+                    return render(request,'otp.html')
         else:
             messages.error(request,'Password wrong')
             return render(request,'register.html',dicti)
@@ -307,8 +348,8 @@ def adminds(request):
 def orders(request):
     if request.session.has_key('password'):
         password = request.session['password']
-        productitems = Product.objects.all()
-        return render(request,'order.html', {'productitems' : productitems})
+        orderitems = Order.objects.all()
+        return render(request,'order.html', {'orderitems':orderitems})
     else:
         return render(request,'order.html')
 
@@ -336,12 +377,22 @@ def adminpd(request):
 
 
 def productview(request,id):
+    if request.user.is_authenticated:
+        user=request.user
+        name=request.user.email
+        customer,created = Customer.objects.get_or_create(user=user,name=name)
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        cartItems = order.get_cart_items
+    else:
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
+
     prodview = Product.objects.get(id=id)
-    return render(request, 'product.html',{'prodview' : prodview})
+    context = {'prodview' : prodview, 'cartItems':cartItems}
+    return render(request, 'product.html', context)
 
 
 #admin 
-
 def delete(request,id):
     product= Product.objects.get(id=id)
     product.delete()
@@ -359,12 +410,13 @@ def addproduct(request):
         oldprice = request.POST['oldprice']
         newprice = request.POST['newprice']
         image = request.POST['image']
+        image_url = request.FILES.get('myfile')
         imagepr1 = request.POST['imagepr1']
         imagepr2 = request.POST['imagepr2']
         imagepr3 = request.POST['imagepr3']
         imagepr4 = request.POST['imagepr4']
         description = request.POST['description']
-        prod = Product(description=description,imagepr4=imagepr4,imagepr3=imagepr3,imagepr2=imagepr2,imagepr1=imagepr1,image=image,name=name,product_quantity=product_quantity,category=category,features=features,oldprice=oldprice,newprice=newprice)
+        prod = Product(image_url=image_url,description=description,imagepr4=imagepr4,imagepr3=imagepr3,imagepr2=imagepr2,imagepr1=imagepr1,image=image,name=name,product_quantity=product_quantity,category=category,features=features,oldprice=oldprice,newprice=newprice)
         prod.save();
         return redirect('adminpd')
     else:

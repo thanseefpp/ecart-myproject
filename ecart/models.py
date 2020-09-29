@@ -10,6 +10,7 @@ class Product(models.Model):
     oldprice = models.FloatField()
     product_quantity = models.IntegerField()
     image = models.CharField(max_length = 2000)
+    image_url = models.ImageField(null=True, blank=True)
     imagepr1 = models.CharField(max_length = 2000)
     imagepr2 = models.CharField(max_length = 2000)
     imagepr3 = models.CharField(max_length = 2000)
@@ -17,8 +18,18 @@ class Product(models.Model):
     features = models.TextField(max_length=1000, verbose_name ='features')
     description = models.TextField(max_length=1000, verbose_name ='description')
 
+    @property
+    def ImageURL(self):
+        try:
+            url = self.image_url.url
+        except:
+            url = ''
+        return url
+
+
     def __str__(self):
         return self.name
+
 
 
 class Customer(models.Model):

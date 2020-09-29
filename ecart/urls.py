@@ -27,6 +27,8 @@ urlpatterns = [
 
 
 
+
+
 # path('adhome',views.adhome,name = 'adhome'),
 # path('adminproduct',views.adminproduct,name='adminproduct'),
 # path('adminproduct',views.adminproduct,name = 'adminproduct'),

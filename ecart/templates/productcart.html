@@ -28,7 +28,7 @@
                     {% for item in items %}
                     <tr>
                         <td class="cart_product">
-                            <a href=""><img src="{{item.product.image}}" alt=""></a>
+                            <a href=""><img style="width: 4rem;height: 4rem;" src="{{item.product.image}}" alt=""></a>
                         </td>
                         <td class="cart_description">
                             <h4><a href="">{{item.product.name}}</a></h4>
@@ -61,7 +61,7 @@
         </div>
         <div style="padding-left: 856px;padding-top: 25px;">
             <a href="{% url 'index' %}" class="primary-btn order-submit">Continue Shope</a>
-            <a href="{% url 'checkout' %}" class="primary-btn order-submit">Place order</a>
+            <a href="{% url 'checkout' %}" class="primary-btn order-submit">Checkout</a>
         </div>
     </div>
 </section> <!--/#cart_items-->

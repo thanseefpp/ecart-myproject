@@ -11,9 +11,10 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 TEMPLATES_DIR = Path.joinpath(BASE_DIR,"templates")
 STATIC_DIR = Path.joinpath(BASE_DIR, "static")
 
@@ -128,5 +129,7 @@ STATICFILES_DIRS =[
     STATIC_DIR,
 ]
 
+MEDIA_URL = '/image/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'ecart/static/image')
 
 

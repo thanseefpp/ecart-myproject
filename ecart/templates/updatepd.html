@@ -88,7 +88,7 @@
                         <h2 class="mb-0">Add Product</h2>
                     </div>
                     <!-- Light table -->
-                    <form class="form-horizontal" action="" method="POST">
+                    <form class="form-horizontal" action="{% url 'update' product.id %}" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="table-responsive">
                             <table class="table align-items-center table-flush">
@@ -160,6 +160,14 @@
                                 </label>
                                 <input id="mother_name" name="image" placeholder="image url" class="input-xlarge"
                                     type="text" value="{{product.image}}">
+                            </div>
+                        </div>
+                        <div class="control-group" style="margin: 40px;">
+                            <div class="controls" style=" padding-left: 67px;">
+                                <label class="control-label" for="mother_name" style="padding-right: 85px;">Path Image
+                                </label>
+                                <input id="mother_name" name="myfile" placeholder="image" class="input-xlarge"
+                                    type="file" value="{{product.image_url}}">
                             </div>
                         </div>
                         <div class="control-group" style="margin: 40px;">

@@ -63,8 +63,8 @@
               <h6 class="h2 text-white d-inline-block mb-0">Product List</h6>
               <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                 <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                  <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
-                  <li class="breadcrumb-item"><a href="#">Product</a></li>
+                  <li class="breadcrumb-item"><a href=""><i class="fas fa-home"></i></a></li>
+                  <li class="breadcrumb-item"><a href="">Product</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Product</li>
                 </ol>
               </nav>
@@ -86,7 +86,7 @@
                         <h2 class="mb-0">Add Product</h2>
                     </div>
                     <!-- Light table -->
-                    <form class="form-horizontal" action="" method="POST">
+                    <form class="form-horizontal" action="{% url 'addproduct' %}" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="table-responsive">
                             <table class="table align-items-center table-flush">
@@ -107,7 +107,7 @@
                                     <option>Laptop</option>
                                     <option>Smartphone</option>
                                     <option>Accessories</option>
-                                    <option>PC</option>
+                                    <option>pc</option>
                                 </select>
                             </div>
                         </div>
@@ -157,6 +157,14 @@
                             </div>
                         </div>
                         <div class="control-group" style="margin: 40px;">
+                          <div class="controls" style=" padding-left: 67px;">
+                              <label class="control-label" for="mother_name" style="padding-right: 85px;">Path Image
+                              </label>
+                              <input id="mother_name" name="myfile" placeholder="image url" class="input-xlarge"
+                                  type="file">
+                          </div>
+                      </div>
+                        <div class="control-group" style="margin: 40px;">
                             <div class="controls" style=" padding-left: 67px;">
                                 <label class="control-label" for="mother_name" style="padding-right: 112px;">Photo 1</label>
                                 <input id="mother_name" name="imagepr1" placeholder="image url" class="input-xlarge"
@@ -196,10 +204,11 @@
                             </div>
                             </table>
                         </div>
-    
+                    </form>
                 </div>
             </div>
         </div>
     </div>
     </div>
+
 {% endblock %}

@@ -116,7 +116,10 @@
                       </a>
                       <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                         <a class="dropdown-item" href="{% url 'update' prod.id %}">Edit</a>
-                        <a class="dropdown-item" href="{% url 'delete' prod.id %}">Delete Product</a>
+                        <form action="{% url 'delete' prod.id %}" method="POST" onsubmit="window.mytest()">
+                        {% csrf_token %}
+                        <input class="dropdown-item" type="submit" value="Delete Product">
+                      </form>
                       </div>
                     </div>
                   </td>
@@ -131,7 +134,10 @@
   </div>
 </div>
 
-<script>
+<script type="text/javascript">
+  window.mytest = function() {var isValid = confirm('Are you sure do you want to delete ?');
+    if (!isValid) {event.preventDefault(); alert("it won't delete!");}}
+
   function myFunction() {
     var input, filter, table, tr, td, i, txtValue;
     input = document.getElementById('myInput');
