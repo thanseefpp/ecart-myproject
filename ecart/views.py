@@ -12,9 +12,11 @@ import json
 import datetime
 import requests
 from .models import *
-from . utils import cookieCart
-
+from . utils import cookieCart, cartData
+import razorpay
 # Create your views here.
+
+
 
 def mobile(request):
     if request.method=='POST':
@@ -122,38 +124,43 @@ def index(request):
     return render(request, 'index.html', context)
 
 
+
 def checkout(request):
+    client = razorpay.Client(auth=("rzp_test_eMnSXZs7JW5fj7", "v12bdGlbSimIYQOff93S9ziv"))
+    data = cartData(request)
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
+
+    order_currency='USD'
+    order_receipt = 'order-rctid-11' 
+   
     if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
+        
+        order_amount=order.get_cart_total
+        order_amount *= 100
+       
     else:
-        cookieData = cookieCart(request)
-        cartItems = cookieData['cartItems']
-        order = cookieData['order']
-        items = cookieData['items']
+       
+        order_amount=order['get_cart_total']
+        order_amount *= 100
+        
+    response = client.order.create(dict(amount=order_amount,currency=order_currency,receipt=order_receipt,payment_capture='0'))
+    order_id = response['id']
+    order_status = response['status']
 
-    context = {'items':items,'order':order, 'cartItems':cartItems}
+    context = {'items':items,'order':order,'cartItems':cartItems,'order_id':order_id}
     return render(request, 'checkout.html', context)
-
-
+  
 
 def cart(request):
-    if request.user.is_authenticated:
-        customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
-    else:
-        cookieData = cookieCart(request)
-        cartItems = cookieData['cartItems']
-        order = cookieData['order']
-        items = cookieData['items']
-        
+    data = cartData(request)
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
+    
     context = {'items':items,'order':order, 'cartItems':cartItems}
     return render(request, 'productcart.html', context)
-
 
 
 def updateItem(request):
@@ -237,6 +244,23 @@ def login(request):
 
 
 
+def productview(request,id):
+    if request.user.is_authenticated:
+        user=request.user
+        name=request.user.email
+        customer,created = Customer.objects.get_or_create(user=user,name=name)
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        cartItems = order.get_cart_items
+    else:
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
+
+    prodview = Product.objects.get(id=id)
+    context = {'prodview' : prodview, 'cartItems':cartItems}
+    return render(request, 'product.html', context)
+
+
+
 def register(request):
     if request.user.is_authenticated:
         return redirect(index)
@@ -268,24 +292,17 @@ def register(request):
                     password=user.first_name
                     request.session['username'] =  username
                     request.session['password'] = password
-                    
-
                     url = "https://d7networks.com/api/verifier/send"
                     number=str(91) + number
-                    
                     payload = {'mobile': number,
                     'sender_id': 'SMSINFO',
                     'message': 'Your otp code is {code}',
                     'expiry': '900'}
-                    files = [
-
-                    ]
+                    files = []
                     headers = {
                     'Authorization': 'Token 0d21f1e3cb977b24ebd925ec71d3fec0cb0a41f3'
                     }
-
                     response = requests.request("POST", url, headers=headers, data = payload, files = files)
-
                     print(response.text.encode('utf8'))
                     data=response.text.encode('utf8')
                     datadict=json.loads(data.decode('utf-8'))
@@ -348,8 +365,8 @@ def adminds(request):
 def orders(request):
     if request.session.has_key('password'):
         password = request.session['password']
-        orderitems = Order.objects.all()
-        return render(request,'order.html', {'orderitems':orderitems})
+        order = Order.objects.all()
+        return render(request,'order.html', {'order':order})
     else:
         return render(request,'order.html')
 
@@ -375,21 +392,6 @@ def adminpd(request):
 #         return render(request,'adminlogin.html')
 
 
-
-def productview(request,id):
-    if request.user.is_authenticated:
-        user=request.user
-        name=request.user.email
-        customer,created = Customer.objects.get_or_create(user=user,name=name)
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        cartItems = order.get_cart_items
-    else:
-        cookieData = cookieCart(request)
-        cartItems = cookieData['cartItems']
-
-    prodview = Product.objects.get(id=id)
-    context = {'prodview' : prodview, 'cartItems':cartItems}
-    return render(request, 'product.html', context)
 
 
 #admin 

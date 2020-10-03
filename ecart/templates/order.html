@@ -90,32 +90,23 @@
                 <thead class="thead-light">
                   <tr>
                     <th scope="col" class="sort" data-sort="name">Order_ID</th>
-                    <th scope="col" class="sort" data-sort="budget">Order_Name</th>
-                    <th scope="col" class="sort" data-sort="status">Order_Type</th>
-                    <th scope="col">Stock</th>
-                    <th scope="col" class="sort" data-sort="completion">Price</th>
-                    <th scope="col">Action</th>
+                    <th scope="col" class="sort" data-sort="budget">Order_Date</th>
+                    <th scope="col" class="sort" data-sort="status">Customer Name</th>
+                    <th scope="col">Total</th>
+                    <th scope="col" class="sort" data-sort="completion">Status</th>
+                    <th scope="col" class="text-right" style="padding-right: 53px;">Action</th>
                   </tr>
                 </thead>
                 <tbody class="list">
-                  {% for order in orderitems %}
+                  {% for order in order %}
                   <tr>
-                    <th scope="row">{{prod.id}}</th>
-                    <td>{{order.name}}</td>
-                    <td>{{order.category}}</td>
-                    <td>{{order.product_quantity}}</td>
-                    <td class="budget">{{order.newprice}}</td>
+                    <th scope="row">{{order.id}}</th>
+                    <td>{{order.date_orderd}}</td>
+                    <td>{{order.customer}}</td>
+                    <td>{{order.get_cart_total}}</td>
+                    <td class="budget">{{order.complete}}</td>
                     <td class="text-right">
-                      <div class="dropdown">
-                        <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown"
-                          aria-haspopup="true" aria-expanded="false">
-                          <i class="fas fa-ellipsis-v"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                          <a class="dropdown-item" href="{% url 'update' order.id %}">Edit</a>
-                          <a class="dropdown-item" href="{% url 'delete' order.id %}">Delete Product</a>
-                        </div>
-                      </div>
+                    <button type="submit" class="btn btn-info btn-md">Approve</button>
                     </td>
                   </tr>
                   {% endfor %}
