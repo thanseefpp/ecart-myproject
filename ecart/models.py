@@ -9,12 +9,11 @@ class Product(models.Model):
     newprice = models.FloatField()
     oldprice = models.FloatField()
     product_quantity = models.IntegerField()
-    image = models.CharField(max_length = 2000)
     image_url = models.ImageField(null=True, blank=True)
-    imagepr1 = models.CharField(max_length = 2000)
-    imagepr2 = models.CharField(max_length = 2000)
-    imagepr3 = models.CharField(max_length = 2000)
-    imagepr4 = models.CharField(max_length = 2000)
+    imagefull_1 = models.ImageField(null=True, blank=True)
+    imagefull_2 = models.ImageField(null=True, blank=True)
+    imagefull_3 = models.ImageField(null=True, blank=True)
+    imagefull_4 = models.ImageField(null=True, blank=True)
     features = models.TextField(max_length=1000, verbose_name ='features')
     description = models.TextField(max_length=1000, verbose_name ='description')
 
@@ -22,6 +21,38 @@ class Product(models.Model):
     def ImageURL(self):
         try:
             url = self.image_url.url
+        except:
+            url = ''
+        return url
+
+    @property
+    def ImageURLFULL(self):
+        try:
+            url = self.imagefull_1.url
+        except:
+            url = ''
+        return url
+
+    @property
+    def ImageURLFULLTWO(self):
+        try:
+            url = self.imagefull_2.url
+        except:
+            url = ''
+        return url
+
+    @property
+    def ImageURLFULLTT(self):
+        try:
+            url = self.imagefull_3.url
+        except:
+            url = ''
+        return url
+
+    @property
+    def ImageURLFULLTF(self):
+        try:
+            url = self.imagefull_4.url
         except:
             url = ''
         return url

@@ -9,7 +9,7 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
 import json
-import datetime
+from datetime import *
 import requests
 from .models import *
 from . utils import cookieCart, cartData
@@ -355,17 +355,16 @@ def adminlogin(request):
 def adminds(request):
     if request.session.has_key('password'):
         password = request.session['password']
-        
         year = datetime.now().year
         month = datetime.now().month
         print(month)
-        chart_order = Order.objects.filter(date_ordered__year = year,date_ordered__month = month)
+        chart_order = Order.objects.filter(date_orderd__year = year,date_orderd__month = month)
         print(chart_order[0].get_cart_total)
 
         chart_values = []
         
         for i in range(0,6):
-            chart_order = Order.objects.filter(date_ordered__year = year,date_ordered__month = month-5+i)
+            chart_order = Order.objects.filter(date_orderd__year = year,date_orderd__month = month-5+i)
             order_total = 0
             for items in chart_order:
                 try:
@@ -386,13 +385,11 @@ def adminds(request):
         
         print('total',round(total,2))
 
-        context ={'customer':customer,'product':product,'order_count':order_count,'total':total,'chart_values':chart_values}
-
         productitems = Product.objects.all()
         orderitem = Order.objects.count()
         customerlist = Customer.objects.all()
         usertotal = User.objects.all()
-        context = {'productitems':productitems,'orderitem':orderitem,'customerlist':customerlist,'usertotal':usertotal}
+        context = {'productitems':productitems,'orderitem':orderitem,'customerlist':customerlist,'usertotal':usertotal,'total':total,'chart_values':chart_values}
         return render(request, 'admindashboard.html',context)
     else:
         return render(request,'adminlogin.html')
@@ -467,14 +464,13 @@ def addproduct(request):
         features = request.POST['features']
         oldprice = request.POST['oldprice']
         newprice = request.POST['newprice']
-        image = request.POST['image']
         image_url = request.FILES.get('myfile')
-        imagepr1 = request.POST['imagepr1']
-        imagepr2 = request.POST['imagepr2']
-        imagepr3 = request.POST['imagepr3']
-        imagepr4 = request.POST['imagepr4']
+        imagefull_1 = request.FILES.get('fileone')
+        imagefull_2 = request.FILES.get('filetwo')
+        imagefull_3 = request.FILES.get('filethree')
+        imagefull_4 = request.FILES.get('filefour')
         description = request.POST['description']
-        prod = Product(image_url=image_url,description=description,imagepr4=imagepr4,imagepr3=imagepr3,imagepr2=imagepr2,imagepr1=imagepr1,image=image,name=name,product_quantity=product_quantity,category=category,features=features,oldprice=oldprice,newprice=newprice)
+        prod = Product(imagefull_4=imagefull_4,imagefull_3=imagefull_3,imagefull_2=imagefull_2,imagefull_1=imagefull_1,image_url=image_url,description=description,name=name,product_quantity=product_quantity,category=category,features=features,oldprice=oldprice,newprice=newprice)
         prod.save();
         return redirect('adminpd')
     else:
@@ -492,11 +488,11 @@ def update(request,id):
         product.features=request.POST['features']
         product.oldprice=request.POST['oldprice']
         product.newprice=request.POST['newprice']
-        product.image=request.POST['image']
-        product.imagepr1=request.POST['imagepr1']
-        product.imagepr2=request.POST['imagepr2']
-        product.imagepr3=request.POST['imagepr3']
-        product.imagepr4=request.POST['imagepr4']
+        product.image_url = request.FILES.get('myfile')
+        product.imagefull_1 = request.FILES.get('fileone')
+        product.imagefull_2 = request.FILES.get('filetwo')
+        product.imagefull_3 = request.FILES.get('filethree')
+        product.imagefull_4 = request.FILES.get('filefour')
         product.description = request.POST['description']
         product.save()
         return redirect(adminpd)

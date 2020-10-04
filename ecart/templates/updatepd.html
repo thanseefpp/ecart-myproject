@@ -72,7 +72,7 @@
                         </nav>
                     </div>
                     <div class="col-lg-6 col-5 text-right">
-                        <a href="{% url 'addproduct' %}" class="btn btn-sm btn-neutral">New</a>
+                        <a href="{% url 'addproduct' %}" class="btn btn-sm btn-neutral">New Product</a>
                     </div>
                 </div>
             </div>
@@ -90,19 +90,15 @@
                     <!-- Light table -->
                     <form class="form-horizontal" action="{% url 'update' product.id %}" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <div class="table-responsive">
-                            <table class="table align-items-center table-flush">
-                                <div class="control-group" style="margin: 40px;">
-                                    <div class="controls" style=" padding-left: 67px;">
-                                        <label class="control-label" style="padding-right: 64px;"
-                                            for="full_name">Product
-                                            Name</label>
-                                        <input id="full_name" name="name" placeholder="Productname"
-                                            value="{{product.name}}" class="input-xlarge" type="text">
-                                    </div>
-                                </div>
+                        <div class="control-group" style="margin: 40px;">
+                            <div class="controls" style=" padding-left: 67px;">
+                                <label class="control-label" style="padding-right: 64px;"
+                                    for="full_name">Product
+                                    Name</label>
+                                <input id="full_name" name="name" placeholder="Productname"
+                                    value="{{product.name}}" class="input-xlarge" type="text">
+                            </div>
                         </div>
-
                         <div class="control-group" style="margin: 40px;">
                             <div class="controls" style=" padding-left: 67px;">
                                 <label class="control-label" style="padding-right: 74px;" for="course">Product
@@ -156,64 +152,52 @@
 
                         <div class="control-group" style="margin: 40px;">
                             <div class="controls" style=" padding-left: 67px;">
-                                <label class="control-label" for="mother_name" style="padding-right: 85px;">Main Photo
-                                </label>
-                                <input id="mother_name" name="image" placeholder="image url" class="input-xlarge"
-                                    type="text" value="{{product.image}}">
+                              <label class="control-label" for="mother_name" style="padding-right: 85px;">Path Image
+                              </label>
+                              <input id="mother_name" name="myfile" value="{{product.ImageURL}}" placeholder="Select Image" class="input-xlarge" type="file" onchange="readURL(this);">
+                              <img src="/image/{{ product.image_url }}" alt="" style="width: 6rem; height: 4rem;">
+                              <!-- <img id="blah" src="https://cdn1.vectorstock.com/i/1000x1000/14/80/doctor-web-icon-therapist-avatar-vector-18531480.jpg"> -->
                             </div>
                         </div>
                         <div class="control-group" style="margin: 40px;">
                             <div class="controls" style=" padding-left: 67px;">
-                                <label class="control-label" for="mother_name" style="padding-right: 85px;">Path Image
-                                </label>
-                                <input id="mother_name" name="myfile" placeholder="image" class="input-xlarge"
-                                    type="file" value="{{product.image_url}}">
+                              <label class="control-label" for="mother_name" style="padding-right: 85px;">Full ViewImage_1
+                              </label>
+                              <input id="mother_name" name="fileone" placeholder="Select Image" class="input-xlarge" type="file">
                             </div>
-                        </div>
-                        <div class="control-group" style="margin: 40px;">
+                          </div>
+                          <div class="control-group" style="margin: 40px;">
                             <div class="controls" style=" padding-left: 67px;">
-                                <label class="control-label" for="mother_name" style="padding-right: 112px;">Photo
-                                    1</label>
-                                <input id="mother_name" name="imagepr1" placeholder="image url" class="input-xlarge"
-                                    type="text" value="{{product.imagepr1}}">
+                              <label class="control-label" for="mother_name" style="padding-right: 85px;">Full ViewImage_2
+                              </label>
+                              <input id="mother_name" name="filetwo" placeholder="Select Image" class="input-xlarge" type="file">
                             </div>
-                        </div>
-                        <div class="control-group" style="margin: 40px;">
+                          </div>
+                          <div class="control-group" style="margin: 40px;">
                             <div class="controls" style=" padding-left: 67px;">
-                                <label class="control-label" for="mother_name" style="padding-right: 112px;">Photo
-                                    2</label>
-                                <input id="mother_name" name="imagepr2" placeholder="image url" class="input-xlarge"
-                                    type="text" value="{{product.imagepr2}}">
+                              <label class="control-label" for="mother_name" style="padding-right: 85px;">Full ViewImage_3
+                              </label>
+                              <input id="mother_name" name="filethree" placeholder="Select Image" class="input-xlarge" type="file">
+                            </div>
+                          </div>
+                          <div class="control-group" style="margin: 40px;">
+                            <div class="controls" style=" padding-left: 67px;">
+                              <label class="control-label" for="mother_name" style="padding-right: 85px;">Full ViewImage_4
+                              </label>
+                              <input id="mother_name" name="filefour" placeholder="Select Image" class="input-xlarge" type="file">
+                            </div>
+                          </div>
 
-                            </div>
-                        </div>
-                        <div class="control-group" style="margin: 40px;">
-                            <div class="controls" style=" padding-left: 67px;">
-                                <label class="control-label" for="mother_name" style="padding-right: 112px;">Photo
-                                    3</label>
-                                <input id="mother_name" name="imagepr3" placeholder="image url" class="input-xlarge"
-                                    type="text" value="{{product.imagepr3}}">
-                            </div>
-                        </div>
-                        <div class="control-group" style="margin: 40px;">
-                            <div class="controls" style=" padding-left: 67px;">
-                                <label class="control-label" for="mother_name" style="padding-right: 112px;">Photo
-                                    4</label>
-                                <input id="mother_name" name="imagepr4" placeholder="image url" class="input-xlarge"
-                                    type="text" value="{{product.imagepr4}}">
-                            </div>
-                        </div>
 
                         <!-- Button -->
                         <div class="control-group" style="margin: 40px;">
                             <label class="control-label" for="submit"></label>
                             <div class="controls" style=" padding-left: 384px;">
                                 <button type="submit" class="btn btn-info btn-md" data-target="#myModal">Save</button>
-
                             </div>
                             </table>
                         </div>
-
+                    </form>
                 </div>
             </div>
         </div>

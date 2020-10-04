@@ -131,5 +131,3 @@ STATICFILES_DIRS =[
 
 MEDIA_URL = '/image/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'ecart/static/image')
-
-

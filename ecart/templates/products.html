@@ -104,7 +104,7 @@
                 {% for prod in productitems %}
                 <tr>
                   <th scope="row">{{prod.id}}</th>
-                  <td>{{prod.name}}</td>
+                  <td><img src="/image/{{ prod.image_url }}" alt="" style="width: 6rem; height: 4rem;">{{prod.name}}</td>
                   <td>{{prod.category}}</td>
                   <td>{{prod.product_quantity}}</td>
                   <td class="budget">${{prod.newprice}}</td>
