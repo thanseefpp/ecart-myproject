@@ -355,10 +355,48 @@ def adminlogin(request):
 def adminds(request):
     if request.session.has_key('password'):
         password = request.session['password']
+        
+        year = datetime.now().year
+        month = datetime.now().month
+        print(month)
+        chart_order = Order.objects.filter(date_ordered__year = year,date_ordered__month = month)
+        print(chart_order[0].get_cart_total)
+
+        chart_values = []
+        
+        for i in range(0,6):
+            chart_order = Order.objects.filter(date_ordered__year = year,date_ordered__month = month-5+i)
+            order_total = 0
+            for items in chart_order:
+                try:
+                    order_total += round(items.get_cart_total,2)
+                except:
+                    order_total += 0
+            chart_values.append(round(order_total,2))        
+        print(chart_values)
+
+        orders = Order.objects.all()
+        total = 0
+        for order in orders:
+            try:
+                order_total = order.get_cart_total
+            except:
+                order_total = 0
+            total = total + order_total
+        
+        print('total',round(total,2))
+
+        context ={'customer':customer,'product':product,'order_count':order_count,'total':total,'chart_values':chart_values}
+
         productitems = Product.objects.all()
-        return render(request, 'admindashboard.html', {'productitems':productitems})
+        orderitem = Order.objects.count()
+        customerlist = Customer.objects.all()
+        usertotal = User.objects.all()
+        context = {'productitems':productitems,'orderitem':orderitem,'customerlist':customerlist,'usertotal':usertotal}
+        return render(request, 'admindashboard.html',context)
     else:
         return render(request,'adminlogin.html')
+
 
 #admin 
 
@@ -381,6 +419,24 @@ def adminpd(request):
     else:
         return render(request,'products.html')
 
+
+def customer(request):
+    ordercount = OrderItem.objects.all()
+    customer = Customer.objects.all()
+    user = User.objects.all()
+    context = {'customer':customer,'ordercount':ordercount,'user':user}
+    return render(request,'customer.html', context)
+
+
+def user(request):
+    user = User.objects.all()
+    context= {'user':user}
+    return render(request,'user.html',context)
+
+
+def admin_home(request):
+
+    return render(request,"admin/home_content.html", context)
 
 
 # def adminproduct(request):

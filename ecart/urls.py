@@ -21,6 +21,8 @@ urlpatterns = [
     path('process_order/',views.processOrder,name='process_order'),
     path('mobile/',views.mobile,name='mobile'),
     path('otp/',views.otp,name='otp'),
+    path('customer/',views.customer,name='customer'),
+    path('user/',views.user,name='user'),
     
 ]
 

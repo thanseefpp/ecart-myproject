@@ -31,21 +31,33 @@
               <!-- Nav items -->
               <ul class="navbar-nav">
                 <li class="nav-item">
-                  <a class="nav-link" href="{{'adminds'}}">
+                  <a class="nav-link" href="{% url 'adminds' %}">
                     <i class="ni ni-tv-2 text-primary"></i>
                     <span class="nav-link-text">Dashboard</span>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link active" href="{{'adminpd'}}">
+                  <a class="nav-link" href="{% url 'adminpd' %}">
                     <i class="ni ni-box-2 text-default"></i>
                     <span class="nav-link-text">Products</span>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{{'orders'}}">
+                  <a class="nav-link" href="{% url 'orders' %}">
                     <i class="ni ni-cart text-default"></i>
                     <span class="nav-link-text">Orders</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'customer' %}">
+                    <i class="ni ni-money-coins text-default"></i>
+                    <span class="nav-link-text">Customers</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'user' %}">
+                    <i class="ni ni-single-02 text-default"></i>
+                    <span class="nav-link-text">Users</span>
                   </a>
                 </li>
               </ul>
