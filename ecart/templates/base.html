@@ -115,11 +115,23 @@
 					<!-- /SEARCH BAR -->
 
 					<!-- ACCOUNT -->
-					<div class="col-md-2 clearfix">
+					{% if user.is_authenticated %}
+					<div class="col-md-1 clearfix">
 						<div class="header-ctn" style="padding-top: 19px;">
 							<!-- Cart -->
 							<div class="dropdown">
-								
+								<a class="dropdown-toggle" href="{% url 'ordersview' %}" aria-expanded="true">
+										<i class="fa fa-suitcase"></i>
+										<span>Orders</span>
+									</a>
+							</div>
+						</div>
+					</div>
+					{% endif %}
+					<div class="col-md-1 clearfix">
+						<div class="header-ctn" style="padding-top: 19px;">
+							<!-- Cart -->
+							<div class="dropdown">
 								<a class="dropdown-toggle" href="{% url 'cart' %}" aria-expanded="true">
 										<i class="fa fa-shopping-cart"></i>
 										<span>Your Cart</span>

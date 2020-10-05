@@ -62,17 +62,14 @@
         <div class="header-body">
           <div class="row align-items-center py-4">
             <div class="col-lg-6 col-7">
-              <h6 class="h2 text-white d-inline-block mb-0">Order List</h6>
+              <h6 class="h2 text-white d-inline-block mb-0">Ordered Products</h6>
               <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                 <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                  <li class="breadcrumb-item"><a href="{{'adminds'}}"><i class="fas fa-home"></i></a></li>
-                  <li class="breadcrumb-item"><a href="">Order</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Orders</li>
+                  <li class="breadcrumb-item"><a href="{% url 'adminds' %}"><i class="fas fa-home"></i></a></li>
+                  <li class="breadcrumb-item"><a href="">OrderedItems</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Items List</li>
                 </ol>
               </nav>
-            </div>
-            <div class="col-lg-6 col-5 text-right">
-              <a href="{% url 'adorderitem' %}" class="btn btn-sm btn-neutral">OrderItems</a>
             </div>
           </div>
         </div>
@@ -85,7 +82,7 @@
           <div class="card">
             <!-- Card header -->
             <div class="card-header border-0">
-              <h3 class="mb-0">Orders</h3>
+              <h3 class="mb-0">Ordered Items</h3>
             </div>
             <!-- Light table -->
             <div class="table-responsive">
@@ -93,31 +90,19 @@
                 <thead class="thead-light">
                   <tr>
                     <th scope="col" class="sort" data-sort="name">Order_ID</th>
-                    <th scope="col" class="sort" data-sort="budget">Order_Date</th>
-                    <th scope="col" class="sort" data-sort="status">Customer Name</th>
+                    <th scope="col" class="sort" data-sort="budget">Item Name</th>
+                    <th scope="col" class="sort" data-sort="status">Sold Count</th>
                     <th scope="col">Total</th>
-                    <th scope="col" class="sort" data-sort="completion">Status</th>
-                    <th scope="col" class="text-right" style="padding-right: 53px;">Action</th>
                   </tr>
                 </thead>
                 <tbody class="list">
-                  {% for order in order %}
+                  {% for order in orderitem %}
                   <tr>
                     <th scope="row">{{order.id}}</th>
-                    <td>{{order.date_orderd}}</td>
-                    <td>{{order.customer}}</td>
-                    <td>{{order.get_cart_total}}</td>
-                    {% if order.approve == True %}
-                    <td class="budget">Complete</td>
-                      <td class="text-right">
-                      <a href="{% url 'approve' order.id %}"><button type="submit" class="btn btn-info btn-md">Approved</button></a>
-                      </td>
-                    {% else %}
-                    <td class="budget">Not Complete</td>
-                      <td class="text-right">
-                        <a href="{% url 'approve' order.id %}"><button type="submit" class="btn btn-info btn-md">Approve</button></a>
-                      </td>
-                    {% endif %}
+                    <td>{{order.product}}</td>
+                    <td>{{order.quantity}}</td>
+                    <td>{{order.get_total}}</td>
+                    </td>
                   </tr>
                   {% endfor %}
                 </tbody>

@@ -23,11 +23,10 @@ urlpatterns = [
     path('otp/',views.otp,name='otp'),
     path('customer/',views.customer,name='customer'),
     path('user/',views.user,name='user'),
-    
+    path('ordersview/',views.ordersview,name='ordersview'),
+    path('adorderitem/',views.adorderitem,name='adorderitem'),
+    path('approve/<int:id>/',views.approve,name='approve'),
 ]
-
-
-
 
 
 

@@ -9,7 +9,7 @@
         <div class="breadcrumbs">
             <ol class="breadcrumb">
               <li><a href="#">Home</a></li>
-              <li class="active">Shopping Cart</li>
+              <li class="active">Purchased products</li>
             </ol>
         </div>
         <div class="table-responsive cart_info">
@@ -18,9 +18,9 @@
                     <tr class="cart_menu">
                         <td class="image">Items</td>
                         <td class="description"></td>
-                        <td class="price">Price</td>
-                        <td class="quantity">Quantity</td>
-                        <td class="total">Total</td>
+                        <td class="price">Quantity</td>
+                        <td class="quantity">Total Price</td>
+                        <td class="total">Date</td>
                         <td></td>
                     </tr>
                 </thead>
@@ -28,34 +28,28 @@
                     {% for item in items %}
                     <tr>
                         <td class="cart_product">
-                            <a href=""><img style="width: 4rem;height: 4rem;" src="{{item.product.image}}" alt=""></a>
+                            <a href=""><img style="width: 4rem;height: 4rem;" src="{{item.product.ImageURL}}" alt=""></a>
                         </td>
                         <td class="cart_description">
                             <h4><a href="">{{item.product.name}}</a></h4>
-                            <p></p>
                         </td>
                         <td class="cart_price">
-                            <p>${{item.product.newprice}}</p>
+                            <p>{{item.quantity}}</p>
                         </td>
                         <td class="cart_quantity">
                             <div class="cart_quantity_button">
-                                <a data-product={{item.product.id}} data-action="add" class="cart_quantity_up update-cart" href=""> + </a>
-                                <input class="cart_quantity_input" type="text" name="quantity" value="{{item.quantity}}" autocomplete="off" size="2">
-                                <a data-product={{item.product.id}} data-action="remove" class="cart_quantity_down update-cart" href=""> - </a>
+                                <p>${{order.get_cart_total}}</p>
                             </div>
                         </td>
                         <td class="cart_total">
-                            <p class="cart_total_price">${{item.get_total}}</p>
-                        </td>
-                        <td class="cart_delete">
-                            <a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
+                            <p class="cart_total_price">{{order.date_orderd.date}}</p>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <div style="padding-left: 856px;padding-top: 25px;">
+        <div style="padding-left: 986px;padding-top: 8px;">
             <a href="{% url 'index' %}" class="primary-btn order-submit">Continue Shope</a>
         </div>
     </div>

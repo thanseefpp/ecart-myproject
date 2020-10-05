@@ -12,7 +12,7 @@ import json
 from datetime import *
 import requests
 from .models import *
-from . utils import cookieCart, cartData
+from . utils import cookieCart, cartData, guestUser
 import razorpay
 # Create your views here.
 
@@ -190,16 +190,16 @@ def updateItem(request):
 
 
 def processOrder(request):
-    transaction_id = datetime.datetime.now().timestamp()
+    transaction_id = datetime.now().timestamp()
     data = json.loads(request.body)
 
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        total = float(data['form']['total'])
+        total = data['form']['total']
         order.transaction_id = transaction_id
 
-        if total == order.get_cart_total:
+        if float(total) == float(order.get_cart_total):
             order.complete = True
         order.save()
 
@@ -211,9 +211,27 @@ def processOrder(request):
                 city=data['shipping']['city'],
                 state=data['shipping']['state'],
                 zipcode=data['shipping']['zipcode'],
-            )
+            )        
     else:
-        print('User is not logged in..')
+        customer,order=guestUser(request,data)
+        
+    total = data['form']['total']
+    order.transaction_id = transaction_id
+
+    if float(total) == float(order.get_cart_total):
+        order.complete = True
+    order.save()
+
+    if order.shipping == True:
+        ShippingAddress.objects.create(
+            customer=customer,
+            order=order,
+            address=data['shipping']['address'],
+            city=data['shipping']['city'],
+            state=data['shipping']['state'],
+            zipcode=data['shipping']['zipcode'],
+        )
+
     return JsonResponse('Payment complete', safe=False)
 
 
@@ -242,6 +260,21 @@ def login(request):
     else:
         return render(request,'login.html')
 
+
+def ordersview(request):
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        orders = Order.objects.filter(customer=customer,complete=True)
+        items=[]
+        for order in orders:
+            orderitems=OrderItem.objects.filter(order=order)
+            for orderitem in orderitems:
+                items.append(orderitem)
+            order=order
+
+        date = order.date_orderd.date
+        context = {'order' : order, 'items':items}
+    return render(request,'ordersview.html',context)
 
 
 def productview(request,id):
@@ -357,7 +390,10 @@ def adminds(request):
         password = request.session['password']
         year = datetime.now().year
         month = datetime.now().month
-        print(month)
+        today = date.today()
+        today_order = Order.objects.filter(date_orderd__date = today)
+        print('hi',today_order)
+
         chart_order = Order.objects.filter(date_orderd__year = year,date_orderd__month = month)
         print(chart_order[0].get_cart_total)
 
@@ -382,14 +418,14 @@ def adminds(request):
             except:
                 order_total = 0
             total = total + order_total
-        
+
         print('total',round(total,2))
 
         productitems = Product.objects.all()
         orderitem = Order.objects.count()
         customerlist = Customer.objects.all()
         usertotal = User.objects.all()
-        context = {'productitems':productitems,'orderitem':orderitem,'customerlist':customerlist,'usertotal':usertotal,'total':total,'chart_values':chart_values}
+        context = {'today_order':today_order,'productitems':productitems,'orderitem':orderitem,'customerlist':customerlist,'usertotal':usertotal,'total':total,'chart_values':chart_values}
         return render(request, 'admindashboard.html',context)
     else:
         return render(request,'adminlogin.html')
@@ -403,7 +439,29 @@ def orders(request):
         order = Order.objects.all()
         return render(request,'order.html', {'order':order})
     else:
-        return render(request,'order.html')
+        return render(request,'adminlogin.html')
+
+def approve(request,id):
+    if request.session.has_key('password'):
+        password = request.session['password']
+        order=Order.objects.get(id=id)
+        if order.approve==False:
+            order.approve=True
+
+        elif order.approve==True:
+            order.approve=False
+
+        order.save();
+        return redirect('orders')
+
+
+def adorderitem(request):
+    if request.session.has_key('password'):
+        password = request.session['password']
+        orderitem = OrderItem.objects.all()
+        return render(request,'adorderitem.html', {'orderitem':orderitem})
+    else:
+        return render(request,'adorderitem.html')
 
 
 #admin 
@@ -430,10 +488,6 @@ def user(request):
     context= {'user':user}
     return render(request,'user.html',context)
 
-
-def admin_home(request):
-
-    return render(request,"admin/home_content.html", context)
 
 
 # def adminproduct(request):
@@ -488,12 +542,37 @@ def update(request,id):
         product.features=request.POST['features']
         product.oldprice=request.POST['oldprice']
         product.newprice=request.POST['newprice']
-        product.image_url = request.FILES.get('myfile')
-        product.imagefull_1 = request.FILES.get('fileone')
-        product.imagefull_2 = request.FILES.get('filetwo')
-        product.imagefull_3 = request.FILES.get('filethree')
-        product.imagefull_4 = request.FILES.get('filefour')
         product.description = request.POST['description']
+        if 'myfile' not in request.POST:
+            product.image_url = request.FILES['myfile']
+        else:
+            product = Product.objects.get(id=id)
+            product.image_url=product.image_url
+
+        if 'fileone' not in request.POST:
+            product.imagefull_1 = request.FILES['fileone']
+        else:
+            product = Product.objects.get(id=id)
+            product.imagefull_1=product.imagefull_1
+
+        if 'filetwo' not in request.POST:
+            product.imagefull_2 = request.FILES['filetwo']
+        else:
+            product = Product.objects.get(id=id)
+            product.imagefull_2=product.imagefull_2
+
+        if 'filethree' not in request.POST:
+            product.imagefull_3 = request.FILES['filethree']
+        else:
+            product = Product.objects.get(id=id)
+            product.imagefull_3=product.imagefull_3
+
+        if 'filefour' not in request.POST:
+            product.imagefull_4 = request.FILES['filefour']
+        else:
+            product = Product.objects.get(id=id)
+            product.imagefull_4=product.imagefull_4
+
         product.save()
         return redirect(adminpd)
 
