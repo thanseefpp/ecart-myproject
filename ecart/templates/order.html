@@ -93,8 +93,8 @@
                 <thead class="thead-light">
                   <tr>
                     <th scope="col" class="sort" data-sort="name">Order_ID</th>
-                    <th scope="col" class="sort" data-sort="budget">Order_Date</th>
-                    <th scope="col" class="sort" data-sort="status">Customer Name</th>
+                    <th scope="col" class="sort" data-sort="budget">Customer Name</th>
+                    <th scope="col" class="sort" data-sort="status">Order_Date</th>
                     <th scope="col">Total</th>
                     <th scope="col" class="sort" data-sort="completion">Status</th>
                     <th scope="col" class="text-right" style="padding-right: 53px;">Action</th>
@@ -102,23 +102,28 @@
                 </thead>
                 <tbody class="list">
                   {% for order in order %}
+                  {% if order.complete == True %}
+                  <form action="{% url 'approve' order.id %}" method="POST">
+                    {% csrf_token %}
                   <tr>
                     <th scope="row">{{order.id}}</th>
-                    <td>{{order.date_orderd}}</td>
                     <td>{{order.customer}}</td>
+                    <td>{{order.date_orderd}}</td>
                     <td>{{order.get_cart_total}}</td>
-                    {% if order.approve == True %}
-                    <td class="budget">Complete</td>
+                    <td class="budget">
+                      <select id="course" name="category" class="input-xlarge">
+                        <option>{{order.order_status}}</option>
+                        <option>Shipped</option>
+                        <option>Complete</option>
+                        <option>Out for delivery</option>
+                    </select>
+                    </td>
                       <td class="text-right">
-                      <a href="{% url 'approve' order.id %}"><button type="submit" class="btn btn-info btn-md">Approved</button></a>
+                      <button type="submit" class="btn btn-info btn-md">Update</button>
                       </td>
-                    {% else %}
-                    <td class="budget">Not Complete</td>
-                      <td class="text-right">
-                        <a href="{% url 'approve' order.id %}"><button type="submit" class="btn btn-info btn-md">Approve</button></a>
-                      </td>
-                    {% endif %}
                   </tr>
+                  </form>
+                  {% endif %}
                   {% endfor %}
                 </tbody>
               </table>

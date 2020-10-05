@@ -164,29 +164,32 @@ def cart(request):
 
 
 def updateItem(request):
-	data = json.loads(request.body)
-	productId = data['productId']
-	action = data['action']
-	print('Action:', action)
-	print('Product:', productId)
+    data = json.loads(request.body)
+    productId = data['productId']
+    action = data['action']
+    print('action;',action)
+    print('productId :',productId)
 
-	customer = request.user.customer
-	product = Product.objects.get(id=productId)
-	order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    customer = request.user.customer
+    product = Product.objects.get(id=productId)
+    order,created =Order.objects.get_or_create(customer=customer,complete=False)
+    orderItem,created =OrderItem.objects.get_or_create(order=order,product=product)
 
-	orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
+    if action == 'add':
+        orderItem.quantity = (orderItem.quantity + 1)
+    elif action == 'remove':
+        orderItem.quantity =(orderItem.quantity - 1)
+    
+    orderItem.save()
 
-	if action == 'add':
-		orderItem.quantity = (orderItem.quantity + 1)
-	elif action == 'remove':
-		orderItem.quantity = (orderItem.quantity - 1)
+    if orderItem.quantity <=0:
+        orderItem.delete()
+    
+    elif action =='delete':
+        orderItem.delete()
+    
+    return JsonResponse('item was added',safe=False)
 
-	orderItem.save()
-
-	if orderItem.quantity <= 0:
-		orderItem.delete()
-
-	return JsonResponse('Item was added', safe=False)
 
 
 def processOrder(request):
@@ -235,11 +238,51 @@ def processOrder(request):
     return JsonResponse('Payment complete', safe=False)
 
 
+def cod(request):
+    transaction_id = datetime.now().timestamp()
+    data = json.loads(request.body)
+
+    if request.user.is_authenticated:
+        customer = request.user.customer
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        total = data['form']['total']
+        order.transaction_id = transaction_id
+
+        order.save()
+
+        if order.shipping == True:
+            ShippingAddress.objects.create(
+                customer=customer,
+                order=order,
+                address=data['shipping']['address'],
+                city=data['shipping']['city'],
+                state=data['shipping']['state'],
+                zipcode=data['shipping']['zipcode'],
+            )        
+    else:
+        customer,order=guestUser(request,data)
+        
+    total = data['form']['total']
+    order.transaction_id = transaction_id
+
+    order.save()
+
+    if order.shipping == True:
+        ShippingAddress.objects.create(
+            customer=customer,
+            order=order,
+            address=data['shipping']['address'],
+            city=data['shipping']['city'],
+            state=data['shipping']['state'],
+            zipcode=data['shipping']['zipcode'],
+        )
+
+    return JsonResponse('Payment complete', safe=False)
+
 
 def logout(request):
     auth.logout(request)
     return redirect(index)
-
 
 
 def login(request):
@@ -266,6 +309,9 @@ def ordersview(request):
         customer = request.user.customer
         orders = Order.objects.filter(customer=customer,complete=True)
         items=[]
+        data = cartData(request)
+        cartItems = data['cartItems']
+        
         for order in orders:
             orderitems=OrderItem.objects.filter(order=order)
             for orderitem in orderitems:
@@ -273,7 +319,7 @@ def ordersview(request):
             order=order
 
         date = order.date_orderd.date
-        context = {'order' : order, 'items':items}
+        context = {'order' : order, 'items':items,'cartItems':cartItems}
     return render(request,'ordersview.html',context)
 
 
@@ -391,7 +437,7 @@ def adminds(request):
         year = datetime.now().year
         month = datetime.now().month
         today = date.today()
-        today_order = Order.objects.filter(date_orderd__date = today)
+        today_order = Order.objects.filter(date_orderd__date = today,complete=True)
         print('hi',today_order)
 
         chart_order = Order.objects.filter(date_orderd__year = year,date_orderd__month = month)
@@ -400,7 +446,7 @@ def adminds(request):
         chart_values = []
         
         for i in range(0,6):
-            chart_order = Order.objects.filter(date_orderd__year = year,date_orderd__month = month-5+i)
+            chart_order = Order.objects.filter(date_orderd__year = year,date_orderd__month = month-5+i,complete=True)
             order_total = 0
             for items in chart_order:
                 try:
@@ -410,7 +456,8 @@ def adminds(request):
             chart_values.append(round(order_total,2))        
         print(chart_values)
 
-        orders = Order.objects.all()
+        orders = Order.objects.filter(complete=True)
+        print('order',orders.count())
         total = 0
         for order in orders:
             try:
@@ -425,7 +472,7 @@ def adminds(request):
         orderitem = Order.objects.count()
         customerlist = Customer.objects.all()
         usertotal = User.objects.all()
-        context = {'today_order':today_order,'productitems':productitems,'orderitem':orderitem,'customerlist':customerlist,'usertotal':usertotal,'total':total,'chart_values':chart_values}
+        context = {'orders':orders,'today_order':today_order,'productitems':productitems,'orderitem':orderitem,'customerlist':customerlist,'usertotal':usertotal,'total':total,'chart_values':chart_values}
         return render(request, 'admindashboard.html',context)
     else:
         return render(request,'adminlogin.html')
@@ -444,13 +491,9 @@ def orders(request):
 def approve(request,id):
     if request.session.has_key('password'):
         password = request.session['password']
+        category=request.POST['category']
         order=Order.objects.get(id=id)
-        if order.approve==False:
-            order.approve=True
-
-        elif order.approve==True:
-            order.approve=False
-
+        order.order_status = category
         order.save();
         return redirect('orders')
 
@@ -476,11 +519,23 @@ def adminpd(request):
 
 
 def customer(request):
-    ordercount = OrderItem.objects.all()
     customer = Customer.objects.all()
-    user = User.objects.all()
-    context = {'customer':customer,'ordercount':ordercount,'user':user}
-    return render(request,'customer.html', context)
+    item=[]
+    for cust in customer:
+        order=Order.objects.filter(customer=cust,complete=True)
+        value=order.count()
+        item.append(value)
+
+    print('item:',item)
+    values=zip(customer,item)
+
+    return render(request,'customer.html', {'value':values})
+
+
+def customerdel(request,id):
+    customer=Customer.objects.get(id=id)
+    customer.delete()
+    return redirect('customer')
 
 
 def user(request):

@@ -26,6 +26,9 @@ urlpatterns = [
     path('ordersview/',views.ordersview,name='ordersview'),
     path('adorderitem/',views.adorderitem,name='adorderitem'),
     path('approve/<int:id>/',views.approve,name='approve'),
+    path('customerdel/<int:id>/',views.customerdel,name='customerdel'),
+    path('cod/',views.cod,name='cod'),
+
 ]
 
 

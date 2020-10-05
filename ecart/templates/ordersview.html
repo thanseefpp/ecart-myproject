@@ -21,7 +21,7 @@
                         <td class="price">Quantity</td>
                         <td class="quantity">Total Price</td>
                         <td class="total">Date</td>
-                        <td></td>
+                        <td>Status</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -44,6 +44,9 @@
                         <td class="cart_total">
                             <p class="cart_total_price">{{order.date_orderd.date}}</p>
                         </td>
+                        <td class="cart_total">
+                          <p class="cart_total_price">{{order.order_status}}</p>
+                      </td>
                     </tr>
                     {% endfor %}
                 </tbody>

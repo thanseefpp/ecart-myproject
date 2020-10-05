@@ -62,6 +62,7 @@ def guestUser(request,data):
 
     customer,created=Customer.objects.get_or_create(email=email)
     customer.name=name
+    customer.email=email
     customer.save()
 
     order = Order.objects.create(

@@ -28,7 +28,7 @@
           <ul class="navbar-nav align-items-center  ml-md-auto ">
   
           </ul>
-  
+
           <ul class="navbar-nav align-items-center  ml-auto ml-md-0 ">
             <li class="nav-item dropdown">
               <a class="nav-link pr-0" href="" role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -93,20 +93,24 @@
                     <th scope="col" class="sort" data-sort="budget">Customer_Name</th>
                     <th scope="col" class="sort" data-sort="status">Email</th>
                     <th scope="col">No of Orders</th>
-                    <th scope="col" class="sort" data-sort="completion">Status</th>
                     <th scope="col" class="text-right" style="padding-right: 53px;">Action</th>
                   </tr>
                 </thead>
                 <tbody class="list">
-                  {% for i in customer %}
+                  {% for customer,item in value %}
                   <tr>
-                    <th scope="row">{{i.id}}</th>
-                    <td>{{i.user}}</td>
-                    <td>{{i.user.email}}</td>
-                    <td>{{i.ordercount.order.count}}</td>
-                    <td class="budget">{{i.complete}}</td>
+                    <th scope="row">{{customer.id}}</th>
+                    <td>{{customer.name}}</td>
+                    <td>{{customer.email}}</td>
+                    <td>{{item}}</td>
                     <td class="text-right">
-                    <button type="submit" class="btn btn-info btn-md">Delete</button>
+                      
+                      <form action="{% url 'customerdel' customer.id %}" method="POST" onsubmit="window.mytest()">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-info btn-md">Delete</button>
+                        <!-- <input class="dropdown-item" type="submit" value="Delete Product" class="btn btn-info btn-md"> -->
+                      </form>
+                    
                     </td>
                   </tr>
                   {% endfor %}
@@ -118,4 +122,8 @@
       </div>
     </div>
   </div>
+  <script>
+      window.mytest = function() {var isValid = confirm('Are you sure do you want to delete ?');
+      if (!isValid) {event.preventDefault(); alert("it won't delete!");}}
+  </script>
 {% endblock %}
