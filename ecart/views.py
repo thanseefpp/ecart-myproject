@@ -606,7 +606,6 @@ def addproduct(request):
     else:
         return render(request, 'productadd.html')
 
-
 #admin 
 
 def update(request,id):
@@ -657,7 +656,6 @@ def update(request,id):
         return render(request, 'updatepd.html', {'product':product})
 
 #crop test mod
-
 # def add_product(request):
 #     if request.method == 'POST':
 
@@ -684,8 +682,6 @@ def update(request,id):
         
 #         image = Image.frombytes('RGB',(640,400),decodestring(base64_bytes))
 #         image.save("foo.png")
-        
-
 #         item = Product(name = name,price = price, digital = product_type, image = image_file)
 #         item.save();
 #         Product.objects.create(name = name,price = price, digital = product_type, image = image_file)
@@ -694,6 +690,8 @@ def update(request,id):
 #         context = {'products':products}
 #         return render(request,"admin/product_view.html", context)
 #     return render(request,"admin/add_product.html")
+
+
 
 # dicti = {"name":name,"category":category,"product_quantity":product_quantity,"attribute":attribute,"oldprice":oldprice,,"oldprice":oldprice}
         # if Product.objects.filter(name=name).exists():
