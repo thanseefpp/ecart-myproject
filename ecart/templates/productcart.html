@@ -48,8 +48,8 @@
                             <p class="cart_total_price">${{item.get_total}}</p>
                         </td>
                         <td class="cart_delete">
-                          <a data-product={{item.product.id}} data-name="{{item.product.name}}" data-action="delete" onclick="window.mycart()" id="checking" class="cart_quantity_down update-cart" href=""> X </a>
-                          <!-- <a data-product={{item.product.id}} data-name="{{item.product.name}}" data-action="delete" onclick="window.mycart()" id="checking" class="primary-btn fa fa-remove update-cart"></a> -->
+                          <!-- <a data-product={{item.product.id}} data-name="{{item.product.name}}" data-action="delete" onclick="window.mycart()" id="checking" class="cart_quantity_down update-cart" href=""> X </a> -->
+                          <a data-product={{item.product.id}} data-name="{{item.product.name}}" data-action="delete" onclick="window.mycart()" id="checking" class="primary-btn fa fa-remove update-cart"></a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -96,7 +96,6 @@
   border: 1px solid #E6E4DF;
   margin-bottom: 50px
 }
-
 
 #cart_items .cart_info .cart_menu {
   background: #D10024;

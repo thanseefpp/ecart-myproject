@@ -91,8 +91,16 @@ def otp(request):
         if status=='success':
             username = request.session['username']   
             password =  request.session['password']
-            dic=authenticate(username=username,password=password)
-            auth.login(request,dic)
+            if User.objects.filter(username=username).exists():
+                user = authenticate(username=username,password=password)
+
+            else:
+                email=request.session['email']
+                number=request.session['number']
+                user=User.objects.create_user(username=username,email=email,password=password,last_name=number,first_name=password)
+                user.save();
+
+            auth.login(request,user)
             return redirect(index)
 
         else:
@@ -151,7 +159,11 @@ def checkout(request):
 
     context = {'items':items,'order':order,'cartItems':cartItems,'order_id':order_id}
     return render(request, 'checkout.html', context)
-  
+
+
+def track(request):
+    return render(request,'track.html')
+
 
 def cart(request):
     data = cartData(request)
@@ -248,6 +260,8 @@ def cod(request):
         total = data['form']['total']
         order.transaction_id = transaction_id
 
+        if float(total) == float(order.get_cart_total):
+            order.complete = True
         order.save()
 
         if order.shipping == True:
@@ -265,6 +279,8 @@ def cod(request):
     total = data['form']['total']
     order.transaction_id = transaction_id
 
+    if float(total) == float(order.get_cart_total):
+        order.complete = True
     order.save()
 
     if order.shipping == True:
@@ -306,21 +322,24 @@ def login(request):
 
 def ordersview(request):
     if request.user.is_authenticated:
+        data = cartData(request)
+        cartItems = data['cartItems']
         customer = request.user.customer
         orders = Order.objects.filter(customer=customer,complete=True)
         items=[]
-        data = cartData(request)
-        cartItems = data['cartItems']
-        
-        for order in orders:
-            orderitems=OrderItem.objects.filter(order=order)
-            for orderitem in orderitems:
-                items.append(orderitem)
-            order=order
+        try:
+            for order in orders:
+                orderitems=OrderItem.objects.filter(order=order)
+                for orderitem in orderitems:
+                    items.append(orderitem)
 
-        date = order.date_orderd.date
-        context = {'order' : order, 'items':items,'cartItems':cartItems}
-    return render(request,'ordersview.html',context)
+        except:
+            order=0
+            items=0
+        zipitems=zip(items,orders)
+        return render(request,'ordersview.html',{'zipitems':zipitems,'cartItems':cartItems})
+    else:
+        return render(request,'index.html')
 
 
 def productview(request,id):
@@ -350,7 +369,7 @@ def register(request):
         number = request.POST['number']
         password = request.POST['password']
         confirmpassword = request.POST['confirmpassword']
-        dicti = {"username":username,"email":email,"number":number}
+        dicti = {"username":username,"email":email}
         if password == confirmpassword:
             if User.objects.filter(email=email).exists():
                 messages.error(request,'Email already taken')
@@ -358,39 +377,36 @@ def register(request):
             elif User.objects.filter(username=username).exists():
                 messages.error(request,"username already taken") 
                 return render(request,'register.html',dicti)
+            elif User.objects.filter(last_name=number).exists():
+                messages.error(request,'Mobile number already taken')
+                return render(request,'register.html',dicti)
+
             else:
-                user = User.objects.create_user(username=username, password=password, email=email, last_name=number, first_name=password)
-                user.save();
-                print("USER CREATED")
-                number = request.POST['number']
-                user=User.objects.get(last_name=number)
-                print(user)
+                request.session['username']=username
+                request.session['password']=password
+                request.session['email']=email
+                request.session['number']=number
+                
+                url = "https://d7networks.com/api/verifier/send"
+                number=str(91) + number
+                payload = {'mobile': number,
+                'sender_id': 'SMSINFO',
+                'message': 'Your otp code is {code}',
+                'expiry': '900'}
+                files = []
+                headers = {
+                'Authorization': 'Token 0d21f1e3cb977b24ebd925ec71d3fec0cb0a41f3'
+                }
+                response = requests.request("POST", url, headers=headers, data = payload, files = files)
+                print(response.text.encode('utf8'))
+                data=response.text.encode('utf8')
+                datadict=json.loads(data.decode('utf-8'))
 
-                if user:
-                    username = user.username
-                    password=user.first_name
-                    request.session['username'] =  username
-                    request.session['password'] = password
-                    url = "https://d7networks.com/api/verifier/send"
-                    number=str(91) + number
-                    payload = {'mobile': number,
-                    'sender_id': 'SMSINFO',
-                    'message': 'Your otp code is {code}',
-                    'expiry': '900'}
-                    files = []
-                    headers = {
-                    'Authorization': 'Token 0d21f1e3cb977b24ebd925ec71d3fec0cb0a41f3'
-                    }
-                    response = requests.request("POST", url, headers=headers, data = payload, files = files)
-                    print(response.text.encode('utf8'))
-                    data=response.text.encode('utf8')
-                    datadict=json.loads(data.decode('utf-8'))
-
-                    id=datadict['otp_id']
-                    status=datadict['status']
-                    print('id:',id)
-                    request.session['id'] = id
-                    return render(request,'otp.html')
+                id=datadict['otp_id']
+                status=datadict['status']
+                print('id:',id)
+                request.session['id'] = id
+                return render(request,'otp.html')
         else:
             messages.error(request,'Password wrong')
             return render(request,'register.html',dicti)

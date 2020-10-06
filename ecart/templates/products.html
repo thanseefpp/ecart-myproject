@@ -146,7 +146,7 @@
     tr = table.getElementsByTagName('tr');
 
     for (i = 0; i < td.length; i++) {
-      td = tr[i].getElementsByTagName("td")[2];
+      td = tr[i].getElementsByTagName("td")[3];
       txtValue = td.textContent || td.innerText;
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";
