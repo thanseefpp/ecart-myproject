@@ -72,7 +72,7 @@
                         </nav>
                     </div>
                     <div class="col-lg-6 col-5 text-right">
-                        <a href="{% url 'addproduct' %}" class="btn btn-sm btn-neutral">New Product</a>
+                        <a href="{% url 'addproduct' %}" class="btn btn-sm btn-neutral">Add Product</a>
                     </div>
                 </div>
             </div>
@@ -85,10 +85,10 @@
                 <div class="card">
                     <!-- Card header -->
                     <div class="card-header border-0">
-                        <h2 class="mb-0">Add Product</h2>
+                        <h2 class="mb-0">Update Product</h2>
                     </div>
                     <!-- Light table -->
-                    <form class="form-horizontal" action="{% url 'update' product.id %}" method="POST" enctype="multipart/form-data">
+                    <form runat="server" class="form-horizontal" action="{% url 'update' product.id %}" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="control-group" style="margin: 40px;">
                             <div class="controls" style=" padding-left: 67px;">
@@ -156,7 +156,7 @@
                                 <a href="{{product.image_url}}" style="text-size-adjust: 2rem;"></a>
                               </label>
                               <input id="mother_name" name="myfile" placeholder="Select Image" class="input-xlarge" type="file" onchange="readURL(this);">
-                              <img src="/image/{{ product.image_url }}" alt="" style="width: 10rem; height: 6rem;">
+                              <img id="blah" alt="your image" src="/image/{{ product.image_url }}" style="width: 10rem; height: 6rem;">
                               <!-- <img id="blah" src="https://cdn1.vectorstock.com/i/1000x1000/14/80/doctor-web-icon-therapist-avatar-vector-18531480.jpg"> -->
                             </div>
                         </div>
@@ -231,6 +231,24 @@
         </div>
     </div>
 </div>
+
+<script>
+    function readURL(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      
+      reader.onload = function(e) {
+        $('#blah').attr('src', e.target.result);
+      }
+      
+      reader.readAsDataURL(input.files[0]); // convert to base64 string
+    }
+  }
+  
+  $("#imgInp").change(function() {
+    readURL(this);
+  });
+  </script>
 
 <style>
 .page {

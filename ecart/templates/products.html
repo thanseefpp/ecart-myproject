@@ -15,7 +15,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text"><i class="fas fa-search"></i></span>
               </div>
-              <input class="form-control" id="myInput" onkeyup="myFunction()" placeholder="Search inside the panel" type="text">
+              <input id="myInput" onkeyup="myFunction()" class="form-control" placeholder="Search " type="text">
             </div>
           </div>
           <button type="button" class="close" data-action="search-close" data-target="#navbar-search-main"
@@ -89,7 +89,7 @@
           </div>
           <!-- Light table -->
           <div class="table-responsive">
-            <table class="table align-items-center table-flush" id="myTable">
+            <table id="myTable" class="table align-items-center table-flush">
               <thead class="thead-light">
                 <tr>
                   <th scope="col" class="sort" data-sort="name">Product_ID</th>
@@ -138,15 +138,19 @@
   window.mytest = function() {var isValid = confirm('Are you sure do you want to delete ?');
     if (!isValid) {event.preventDefault(); alert("it won't delete!");}}
 
-  function myFunction() {
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById('myInput');
-    filter = input.value.toUpperCase();
-    table = document.getElementById("myTable");
-    tr = table.getElementsByTagName('tr');
 
-    for (i = 0; i < td.length; i++) {
-      td = tr[i].getElementsByTagName("td")[3];
+function myFunction() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
       txtValue = td.textContent || td.innerText;
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";
@@ -155,5 +159,6 @@
       }
     }
   }
+}
 </script>
 {% endblock %}

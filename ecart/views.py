@@ -552,6 +552,7 @@ def customer(request):
     return render(request,'customer.html', {'value':values})
 
 
+
 def customerdel(request,id):
     customer=Customer.objects.get(id=id)
     customer.delete()
@@ -618,44 +619,81 @@ def update(request,id):
         product.oldprice=request.POST['oldprice']
         product.newprice=request.POST['newprice']
         product.description = request.POST['description']
-        product.save()
+
         if 'myfile' not in request.POST:
-            product.image_url = request.FILES['myfile']
+            image_url = request.FILES['myfile']
         else:
-            product = Product.objects.get(id=id)
-            product.image_url=product.image_url
+            image_url=product.image_url
 
         if 'fileone' not in request.POST:
-            product.imagefull_1 = request.FILES['fileone']
+            imagefull_1 = request.FILES['fileone']
         else:
-            product = Product.objects.get(id=id)
-            product.imagefull_1=product.imagefull_1
+            imagefull_1=product.imagefull_1
 
         if 'filetwo' not in request.POST:
-            product.imagefull_2 = request.FILES['filetwo']
+            imagefull_2 = request.FILES['filetwo']
         else:
-            product = Product.objects.get(id=id)
-            product.imagefull_2=product.imagefull_2
+            imagefull_2=product.imagefull_2
 
         if 'filethree' not in request.POST:
-            product.imagefull_3 = request.FILES['filethree']
+            imagefull_3 = request.FILES['filethree']
         else:
-            product = Product.objects.get(id=id)
-            product.imagefull_3=product.imagefull_3
+            imagefull_3=product.imagefull_3
 
         if 'filefour' not in request.POST:
-            product.imagefull_4 = request.FILES['filefour']
+            imagefull_4 = request.FILES['filefour']
         else:
-            product = Product.objects.get(id=id)
-            product.imagefull_4=product.imagefull_4
-
+            imagefull_4=product.imagefull_4
+        
+        product.image_url=image_url
+        product.imagefull_1=imagefull_1
+        product.imagefull_2=imagefull_2
+        product.imagefull_3=imagefull_3
+        product.imagefull_4=imagefull_4
         product.save()
         return redirect(adminpd)
 
     else:
         return render(request, 'updatepd.html', {'product':product})
 
+#crop test mod
 
+# def add_product(request):
+#     if request.method == 'POST':
+
+#         name = request.POST['name']
+#         price = request.POST['price']
+#         product_type = request.POST['product_type']
+#         image_data =request.POST['image64data']
+#         print('data', image_data)
+#         value = image_data.strip('data:image/png;base64,')
+
+#         value = value.strip()
+#         value = value.replace(' ', '')
+#         value = value.replace('\n', '')
+#         if len(value) % 4:
+#             value += '=' * (4 - len(value) % 4)
+#         value = binascii.a2b_base64(value)
+#         with open('image.jpg', 'wb') as image_file:
+#             image_file.write(value)
+        
+#         image_file.close()
+        
+#         message_bytes = image_data.encode('ascii')
+#         base64_bytes = base64.b64encode(message_bytes)
+        
+#         image = Image.frombytes('RGB',(640,400),decodestring(base64_bytes))
+#         image.save("foo.png")
+        
+
+#         item = Product(name = name,price = price, digital = product_type, image = image_file)
+#         item.save();
+#         Product.objects.create(name = name,price = price, digital = product_type, image = image_file)
+
+#         products = Product.objects.all()
+#         context = {'products':products}
+#         return render(request,"admin/product_view.html", context)
+#     return render(request,"admin/add_product.html")
 
 # dicti = {"name":name,"category":category,"product_quantity":product_quantity,"attribute":attribute,"oldprice":oldprice,,"oldprice":oldprice}
         # if Product.objects.filter(name=name).exists():
