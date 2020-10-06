@@ -134,31 +134,35 @@ def index(request):
 
 
 def checkout(request):
-    client = razorpay.Client(auth=("rzp_test_eMnSXZs7JW5fj7", "v12bdGlbSimIYQOff93S9ziv"))
-    data = cartData(request)
-    cartItems = data['cartItems']
-    order = data['order']
-    items = data['items']
+    try:
+        client = razorpay.Client(auth=("rzp_test_eMnSXZs7JW5fj7", "v12bdGlbSimIYQOff93S9ziv"))
+        data = cartData(request)
+        cartItems = data['cartItems']
+        order = data['order']
+        items = data['items']
 
-    order_currency='USD'
-    order_receipt = 'order-rctid-11' 
-   
-    if request.user.is_authenticated:
+        order_currency='USD'
+        order_receipt = 'order-rctid-11' 
+    
+        if request.user.is_authenticated:
+            
+            order_amount=order.get_cart_total
+            order_amount *= 100
         
-        order_amount=order.get_cart_total
-        order_amount *= 100
-       
-    else:
-       
-        order_amount=order['get_cart_total']
-        order_amount *= 100
+        else:
         
-    response = client.order.create(dict(amount=order_amount,currency=order_currency,receipt=order_receipt,payment_capture='0'))
-    order_id = response['id']
-    order_status = response['status']
+            order_amount=order['get_cart_total']
+            order_amount *= 100
+            
+        response = client.order.create(dict(amount=order_amount,currency=order_currency,receipt=order_receipt,payment_capture='0'))
+        order_id = response['id']
+        order_status = response['status']
 
-    context = {'items':items,'order':order,'cartItems':cartItems,'order_id':order_id}
-    return render(request, 'checkout.html', context)
+        context = {'items':items,'order':order,'cartItems':cartItems,'order_id':order_id}
+        return render(request, 'checkout.html', context)
+    except:
+        pass
+    return render(request,'checkout.html')
 
 
 def track(request):
@@ -614,6 +618,7 @@ def update(request,id):
         product.oldprice=request.POST['oldprice']
         product.newprice=request.POST['newprice']
         product.description = request.POST['description']
+        product.save()
         if 'myfile' not in request.POST:
             product.image_url = request.FILES['myfile']
         else:
