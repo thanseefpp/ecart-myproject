@@ -19,7 +19,7 @@
                             </div>
                             <button type="button" class="close" data-action="search-close" data-target="#navbar-search-main"
                               aria-label="Close">
-                              <span aria-hidden="true">×</span>
+                              <!-- <span aria-hidden="true">×</span> -->
                             </button>
                           </form>
                   
@@ -87,7 +87,7 @@
                               <h2 class="mb-0">Add Product</h2>
                             </div>
                             <!-- Light table -->
-                            <form runat="server" class="form-horizontal" action="{% url 'addproduct' %}" enctype="multipart/form-data" method="POST">
+                            <form class="form-horizontal" action="{% url 'addproduct' %}" enctype="multipart/form-data" method="POST">
                               {% csrf_token %}
                               <div class="table-responsive">
                                   <div class="control-group" style="margin: 40px;">
@@ -146,42 +146,45 @@
                               </div>
                               <div class="control-group" style="margin: 40px;">
                                 <div class="controls" style=" padding-left: 67px;">
-                                  <label class="control-label" for="mother_name" style="padding-right: 85px;">Path Image
-                                  </label>
-                                  <input id="imgInp" name="myfile" placeholder="Select Image" class="input-xlarge" type="file">
-                                  <img id="blah" alt="your image" src="/image/{{ product.image_url }}">
-                                </div>
-                              </div>
-                              <div>
-                              </div>
-
-                              <main class="page">
-                                <h2>Crop test</h2>
-                                
-                                <div class="box">
-                                    <input type="file" id="file-input">
-                                </div>
-                                
-                                <div class="box-2">
-                                    <div class="result"></div>
-                                </div>
-                                
-                                <div class="box-2 img-result hide">
-                                    
-                                    <img class="cropped" src="" alt="">
-                                </div>
-                                
-                                <div class="box">
-                                    <div class="options hide">
-                                        <label> Width</label>
-                                        <input type="number" class="img-w" value="300" min="100" max="1200" />
+                                  <label class="control-label" for="photo"></label>
+                                    <div class="controls">
+                                        <input class="hidden" required = True id="imageBaseData" name="image64data" class="input-file" type="text" >
+                
+                                        <main class="page">
+                                            <label class="control-label" for="full_name">Product Photo</label>
+                                            <!-- input file -->
+                                            <div class="box">
+                                                <input  type="file" id="file-input">
+                                            </div>
+                                            <!-- leftbox -->
+                                            <div class="box-2">
+                                                <div class="result"></div>
+                                            </div>
+                                            <!--rightbox-->
+                                            <div class="box-2 img-result hide">
+                                                <!-- result of crop -->
+                                                <img id="cropped" class="cropped"  src="" alt="">
+                                            </div>
+                                            <!-- input file -->
+                                            <div class="box">
+                                                <div class="options hide" >
+                                                    <label style="padding-left: 7px;width: 70px;"> Width</label>
+                                                    <input type="number" name="myfile" class="img-w" style="padding-left: 7px;width: 141px;" value="300" min="200" max="1200" />
+                                                </div>
+                                                <!-- save btn -->
+                                                <button class="btnm save hide">Confirm</button>
+                                                <!-- download btn -->
+                                                <a href="" id="" class="btnm hidden"></a>
+                                                <button id="load" class="btnm btn primary" type="button" >Upload</button>
+                                            </div>
+                                        </main>
                                     </div>
-                                    
-                                    <button class="btn save hide">Save</button>
-                                   
-                                    <a href="" class="btn download hide">Upload</a>
+                                  <!-- <label class="control-label" for="mother_name" style="padding-right: 85px;">Path Image</label>
+                                  <input class="hidden" required = True id="imageBaseData" name="image64data" class="input-file" type="text" >
+                                  <img id="" alt="your image" src="/image/{{ product.image_url }}"> -->
                                 </div>
-                            </main>
+                              </div> 
+
 
                               <div class="control-group" style="margin: 40px;">
                                 <div class="controls" style=" padding-left: 67px;">
@@ -226,25 +229,12 @@
                     </div>
                     </div>
                     
-                    <script>
-                      function readURL(input) {
-                      if (input.files && input.files[0]) {
-                        var reader = new FileReader();
-                        
-                        reader.onload = function(e) {
-                          $('#blah').attr('src', e.target.result);
-                        }
-                        
-                        reader.readAsDataURL(input.files[0]); // convert to base64 string
-                      }
-                    }
-                    
-                    $("#imgInp").change(function() {
-                      readURL(this);
-                    });
-                    </script>
-
                     <style>
+                      .hidden{
+                        display:none;
+                        visibility:hidden;
+                        }
+
                       .page {
                         margin: 1em auto;
                         max-width: 768px;
@@ -255,7 +245,7 @@
                       }
                       
                       .box {
-                        padding: 0.5em;
+                        padding: 0.8em;
                         width: 100%;
                         margin:0.5em;
                       }
@@ -267,10 +257,10 @@
                       
                       .options label,
                       .options input{
-                        width:8em;
+                        width:4em;
                         padding:0.5em 1em;
                       }
-                      .btn{
+                      .btnm{
                         background:white;
                         color:black;
                         border:1px solid black;
@@ -283,6 +273,7 @@
                       
                       .hide {
                         display: none;
+                        padding-left: 20px;
                       }
                       
                       img {
@@ -291,59 +282,78 @@
                       
                       </style>
                       <script>
-                      // vars
-                      let result = document.querySelector('.result'),
-                      img_result = document.querySelector('.img-result'),
-                      img_w = document.querySelector('.img-w'),
-                      img_h = document.querySelector('.img-h'),
-                      options = document.querySelector('.options'),
-                      save = document.querySelector('.save'),
-                      cropped = document.querySelector('.cropped'),
-                      dwn = document.querySelector('.download'),
-                      upload = document.querySelector('#file-input'),
-                      cropper = '';
-                      
-                      // on change show image with crop options
-                      upload.addEventListener('change', (e) => {
-                        if (e.target.files.length) {
-                          // start file reader
-                          const reader = new FileReader();
-                          reader.onload = (e)=> {
-                            if(e.target.result){
-                              // create new image
-                              let img = document.createElement('img');
-                              img.id = 'image';
-                              img.src = e.target.result
-                              // clean result before
-                              result.innerHTML = '';
-                              // append new image
-                              result.appendChild(img);
-                              // show save btn and options
-                              save.classList.remove('hide');
-                              options.classList.remove('hide');
-                              // init cropper
-                              cropper = new Cropper(img);
-                            }
-                          };
-                          reader.readAsDataURL(e.target.files[0]);
+                        // vars
+                    let result = document.querySelector('.result'),
+                    img_result = document.querySelector('.img-result'),
+                    img_w = document.querySelector('.img-w'),
+                    img_h = document.querySelector('.img-h'),
+                    options = document.querySelector('.options'),
+                    save = document.querySelector('.save'),
+                    cropped = document.querySelector('.cropped'),
+                    dwn = document.querySelector('.download'),
+                    upload = document.querySelector('#file-input'),
+                    cropper = '';
+                    
+                    // on change show image with crop options
+                    upload.addEventListener('change', (e) => {
+                      if (e.target.files.length) {
+                        // start file reader
+                        const reader = new FileReader();
+                        reader.onload = (e)=> {
+                          if(e.target.result){
+                            // create new image
+                            let img = document.createElement('img');
+                            img.id = 'image';
+                            img.src = e.target.result
+                            // clean result before
+                            result.innerHTML = '';
+                            // append new image
+                            result.appendChild(img);
+                            // show save btn and options
+                            save.classList.remove('hide');
+                            options.classList.remove('hide');
+                            // init cropper
+                            cropper = new Cropper(img);
+                          }
+                        };
+                        reader.readAsDataURL(e.target.files[0]);
+                      }
+                    });
+                    
+                    // save on click
+                    save.addEventListener('click',(e)=>{
+                      e.preventDefault();
+                      // get result to data uri
+                      let imgSrc = cropper.getCroppedCanvas({
+                        width: img_w.value // input value
+                      }).toDataURL();
+                      // remove hide class of img
+                      cropped.classList.remove('hide');
+                      img_result.classList.remove('hide');
+                      // show image cropped
+                      cropped.src = imgSrc;
+                      dwn.classList.remove('hide');
+                      dwn.download = 'imagename.png';
+                      dwn.setAttribute('href',imgSrc);
+                    
+                    });
+                    
+                    </script>
+                    <script>
+                        var button = document.getElementById('load');
+                        button.addEventListener('click',function(){
+                            setImageData();
+                            console.log('Cropped')
+                        })
+                        
+                    
+                        function setImageData(){
+                            
+                            var imageElement = document.getElementById('cropped');
+                            var imageData = imageElement.src;
+                            var hiddenElement = document.getElementById("imageBaseData");
+                            hiddenElement.value = imageData;
+                            console.log("data set")
                         }
-                      });
-                      
-                      // save on click
-                      save.addEventListener('click',(e)=>{
-                        e.preventDefault();
-                        // get result to data uri
-                        let imgSrc = cropper.getCroppedCanvas({
-                          width: img_w.value // input value
-                        }).toDataURL();
-                        // remove hide class of img
-                        cropped.classList.remove('hide');
-                        img_result.classList.remove('hide');
-                        // show image cropped
-                        cropped.src = imgSrc;
-                        dwn.classList.remove('hide');
-                        dwn.download = 'imagename.png';
-                        dwn.setAttribute('href',imgSrc);
-                      });
-                      </script>
+                    </script>
 {% endblock %}

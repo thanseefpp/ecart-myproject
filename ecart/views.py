@@ -14,8 +14,13 @@ import requests
 from .models import *
 from . utils import cookieCart, cartData, guestUser
 import razorpay
+import base64
+from PIL import Image
+from base64 import decodestring
+import binascii
+from django.core.files import File
+from django.core.files.base import ContentFile
 # Create your views here.
-
 
 
 def mobile(request):
@@ -131,6 +136,63 @@ def index(request):
     context = {'productitems' : productitems, 'cartItems':cartItems, 'Laptop':Laptop, 'Smartphone':Smartphone, 'Accessories':Accessories, 'pc':pc}
     return render(request, 'index.html', context)
 
+def smartphone(request):
+    if request.user.is_authenticated:
+        user=request.user
+        name=request.user.email
+        customer,created = Customer.objects.get_or_create(user=user,name=name)
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+        cartItems = order.get_cart_items
+    else:
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
+
+    Laptop = Product.objects.filter(category='Laptop')
+    Smartphone = Product.objects.filter(category='Smartphone')
+    Accessories = Product.objects.filter(category='Accessories')
+    pc = Product.objects.filter(category='pc')
+    context = {'cartItems':cartItems, 'Laptop':Laptop, 'Smartphone':Smartphone, 'Accessories':Accessories, 'pc':pc}
+    return render(request, 'smartphone.html', context)
+
+
+def accessories(request):
+    if request.user.is_authenticated:
+        user=request.user
+        name=request.user.email
+        customer,created = Customer.objects.get_or_create(user=user,name=name)
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+        cartItems = order.get_cart_items
+    else:
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
+
+    Laptop = Product.objects.filter(category='Laptop')
+    Smartphone = Product.objects.filter(category='Smartphone')
+    Accessories = Product.objects.filter(category='Accessories')
+    pc = Product.objects.filter(category='pc')
+    context = {'cartItems':cartItems, 'Laptop':Laptop, 'Smartphone':Smartphone, 'Accessories':Accessories, 'pc':pc}
+    return render(request, 'accessories.html', context)
+
+def laptop(request):
+    if request.user.is_authenticated:
+        user=request.user
+        name=request.user.email
+        customer,created = Customer.objects.get_or_create(user=user,name=name)
+        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        items = order.orderitem_set.all()
+        cartItems = order.get_cart_items
+    else:
+        cookieData = cookieCart(request)
+        cartItems = cookieData['cartItems']
+
+    Laptop = Product.objects.filter(category='Laptop')
+    Smartphone = Product.objects.filter(category='Smartphone')
+    Accessories = Product.objects.filter(category='Accessories')
+    pc = Product.objects.filter(category='pc')
+    context = {'cartItems':cartItems, 'Laptop':Laptop, 'Smartphone':Smartphone, 'Accessories':Accessories, 'pc':pc}
+    return render(request, 'laptop.html', context)
 
 
 def checkout(request):
@@ -230,6 +292,7 @@ def processOrder(request):
                 city=data['shipping']['city'],
                 state=data['shipping']['state'],
                 zipcode=data['shipping']['zipcode'],
+                payment_status=data['shipping']['payment_status'],
             )        
     else:
         customer,order=guestUser(request,data)
@@ -249,6 +312,7 @@ def processOrder(request):
             city=data['shipping']['city'],
             state=data['shipping']['state'],
             zipcode=data['shipping']['zipcode'],
+            payment_status=data['shipping']['payment_status'],
         )
 
     return JsonResponse('Payment complete', safe=False)
@@ -276,6 +340,7 @@ def cod(request):
                 city=data['shipping']['city'],
                 state=data['shipping']['state'],
                 zipcode=data['shipping']['zipcode'],
+                payment_status=data['shipping']['payment_status'],
             )        
     else:
         customer,order=guestUser(request,data)
@@ -295,6 +360,7 @@ def cod(request):
             city=data['shipping']['city'],
             state=data['shipping']['state'],
             zipcode=data['shipping']['zipcode'],
+            payment_status=data['shipping']['payment_status'],
         )
 
     return JsonResponse('Payment complete', safe=False)
@@ -336,7 +402,6 @@ def ordersview(request):
                 orderitems=OrderItem.objects.filter(order=order)
                 for orderitem in orderitems:
                     items.append(orderitem)
-
         except:
             order=0
             items=0
@@ -344,6 +409,7 @@ def ordersview(request):
         return render(request,'ordersview.html',{'zipitems':zipitems,'cartItems':cartItems})
     else:
         return render(request,'index.html')
+
 
 
 def productview(request,id):
@@ -488,11 +554,22 @@ def adminds(request):
 
         print('total',round(total,2))
 
+        payment = []
+        paypal = ShippingAddress.objects.filter(payment_status='paypal')
+        razor = ShippingAddress.objects.filter(payment_status='razorpay')
+
+        pay = paypal.count()
+        raz = razor.count()
+        print('paypal:',paypal.count())
+        print('razor:',razor.count())
+        payment.append(raz)
+        payment.append(pay)
+        print('payment checking:',payment)
         productitems = Product.objects.all()
         orderitem = Order.objects.count()
         customerlist = Customer.objects.all()
         usertotal = User.objects.all()
-        context = {'orders':orders,'today_order':today_order,'productitems':productitems,'orderitem':orderitem,'customerlist':customerlist,'usertotal':usertotal,'total':total,'chart_values':chart_values}
+        context = {'payment':payment,'orders':orders,'today_order':today_order,'productitems':productitems,'orderitem':orderitem,'customerlist':customerlist,'usertotal':usertotal,'total':total,'chart_values':chart_values}
         return render(request, 'admindashboard.html',context)
     else:
         return render(request,'adminlogin.html')
@@ -507,6 +584,7 @@ def orders(request):
         return render(request,'order.html', {'order':order})
     else:
         return render(request,'adminlogin.html')
+
 
 def approve(request,id):
     if request.session.has_key('password'):
@@ -594,17 +672,23 @@ def addproduct(request):
         features = request.POST['features']
         oldprice = request.POST['oldprice']
         newprice = request.POST['newprice']
-        image_url = request.FILES.get('myfile')
+        image_url = request.POST['image64data']
         imagefull_1 = request.FILES.get('fileone')
         imagefull_2 = request.FILES.get('filetwo')
         imagefull_3 = request.FILES.get('filethree')
         imagefull_4 = request.FILES.get('filefour')
         description = request.POST['description']
+        print('data', image_url)
+        value = image_data.strip('data:image/png;base64,')
+        format, imgstr = image_data.split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr),name='temp.' + ext)
         prod = Product(imagefull_4=imagefull_4,imagefull_3=imagefull_3,imagefull_2=imagefull_2,imagefull_1=imagefull_1,image_url=image_url,description=description,name=name,product_quantity=product_quantity,category=category,features=features,oldprice=oldprice,newprice=newprice)
         prod.save();
         return redirect('adminpd')
     else:
         return render(request, 'productadd.html')
+
 
 #admin 
 

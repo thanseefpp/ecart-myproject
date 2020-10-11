@@ -164,7 +164,7 @@
     <!-- chart -->
     <div class="container-fluid mt--6">
       <div class="row">
-        <div class="col-12">
+        <div class="col-xl-8">
           <div class="card bg-default">
             <div class="card-header bg-transparent">
               <div class="row align-items-center">
@@ -183,9 +183,62 @@
             </div>
           </div>
         </div>
+      <div class="col-xl-4">
+        <div class="card" style="padding-bottom: 4.5rem;">
+          <div class="card-header bg-transparent">
+            <div class="row align-items-center">
+              <div class="col">
+                <h6 class="text-uppercase text-muted ls-1 mb-1">Payment</h6>
+                <h5 class="h3 mb-0">Payment Usage</h5>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <!-- Chart -->
+            <div class="card-body">
+              <canvas id="chDonut1"></canvas>
+          </div>
+          </div>
+        </div>
+      </div>
       </div>
     </div>
   </div>
-  
-  
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js"></script>
+
+<script>
+    /* chart.js chart examples */
+
+// chart colors
+var colors = ['#007bff','#28a745','#333333','#c3e6cb','#dc3545','#6c757d'];
+
+/* 3 donut charts */
+var donutOptions = {
+  cutoutPercentage: 75, 
+  legend: {position:'bottom', padding:4, labels: {pointStyle:'circle', usePointStyle:true}}
+};
+
+// donut 1
+var chDonutData1 = {
+    labels: ['Paypal', 'Razorpay'],
+    datasets: [
+      {
+        backgroundColor: colors.slice(0,5),
+        borderWidth: 0,
+        data: {{payment}}
+      }
+    ]
+};
+
+var chDonut1 = document.getElementById("chDonut1");
+if (chDonut1) {
+  new Chart(chDonut1, {
+      type: 'pie',
+      data: chDonutData1,
+      options: donutOptions
+  });
+}
+</script>
+
 {% endblock %}

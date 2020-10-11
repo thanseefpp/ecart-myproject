@@ -16,10 +16,10 @@
 							<h3 class="title">New Products</h3>
 							<div class="section-nav">
 								<ul class="section-tab-nav tab-nav">
-									<li class="active"><a data-toggle="tab" href="#Laptop">Laptops</a></li>
+									<li class="active"><a data-toggle="tab" href="#all">All</a></li>
+									<li><a data-toggle="tab" href="#Laptop">Laptops</a></li>
 									<li><a data-toggle="tab" href="#Smartphone">Smartphones</a></li>
 									<li><a data-toggle="tab" href="#Accessories">Accessories</a></li>
-									<li><a data-toggle="tab" href="#pc">PC</a></li>
 								</ul>
 							</div>
 						</div>
@@ -27,37 +27,121 @@
 					<!-- /section title -->
 
 					<!-- Products tab & slick -->
+					
 					<div class="col-md-12">
 						<div class="row">
+							
 							<div class="products-tabs">
+							
 								<!-- tab -->
-								<div id="tab1" class="tab-pane active">
+								<div id="all" class="tab-pane fade in active">
 									<div class="products-slick" data-nav="#slick-nav-1">
 										<!-- product -->
-										{% for product in productitems %}
+										{% for lap in productitems %}
 										<div class="product">
 											<div class="product-img">
-												<img src="{{product.ImageURL}}" style="width: 24rem;height: 16rem;">
+												<img src="{{lap.ImageURL}}" style="width: 24rem;height: 16rem;">
 												<div class="product-label">
 													<span class="new">NEW</span>
 												</div>
 											</div>
 											<div class="product-body">
-												<p class="product-category">{{product.category}}</p>
-												<h3 class="product-name"><a href="{% url 'productview' product.id %}">{{product.name}}</a></h3>
-												<h4 class="product-price">${{product.newprice}}<del class="product-old-price">(${{product.oldprice}})</del></h4>
+												<p class="product-category">{{lap.category}}</p>
+												<h3 class="product-name"><a href="{% url 'productview' lap.id %}">{{lap.name}}</a></h3>
+												<h4 class="product-price">${{lap.newprice}}<del class="product-old-price">(${{lap.oldprice}})</del></h4>
 				
 											</div>
 											<div class="add-to-cart">
-												<button data-product="{{product.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<button data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
 										<!-- /product -->
 										{% endfor %}
-									
 									</div>
 									<div id="slick-nav-1" class="products-slick-nav"></div>
 								</div>
+
+								<div id="Laptop" class="tab-pane">
+									<div class="products-slick" data-nav="#slick-nav-4">
+										<!-- product -->
+										{% for lap in Laptop %}
+										<div class="product">
+											<div class="product-img">
+												<img src="{{lap.ImageURL}}" style="width: 24rem;height: 16rem;">
+												<div class="product-label">
+													<span class="new">NEW</span>
+												</div>
+											</div>
+											<div class="product-body">
+												<p class="product-category">{{lap.category}}</p>
+												<h3 class="product-name"><a href="{% url 'productview' lap.id %}">{{lap.name}}</a></h3>
+												<h4 class="product-price">${{lap.newprice}}<del class="product-old-price">(${{lap.oldprice}})</del></h4>
+				
+											</div>
+											<div class="add-to-cart">
+												<button data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+											</div>
+										</div>
+										<!-- /product -->
+										{% endfor %}
+									</div>
+									<div id="slick-nav-4" class="products-slick-nav"></div>
+								</div>
+
+								<div id="Smartphone" class="tab-pane">
+									<div class="products-slick" data-nav="#slick-nav-3">
+										<!-- product -->
+										{% for lap in Smartphone %}
+										<div class="product">
+											<div class="product-img">
+												<img src="{{lap.ImageURL}}" style="width: 24rem;height: 16rem;">
+												<div class="product-label">
+													<span class="new">NEW</span>
+												</div>
+											</div>
+											<div class="product-body">
+												<p class="product-category">{{lap.category}}</p>
+												<h3 class="product-name"><a href="{% url 'productview' lap.id %}">{{lap.name}}</a></h3>
+												<h4 class="product-price">${{lap.newprice}}<del class="product-old-price">(${{lap.oldprice}})</del></h4>
+				
+											</div>
+											<div class="add-to-cart">
+												<button data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+											</div>
+										</div>
+										<!-- /product -->
+										{% endfor %}
+									</div>
+									<div id="slick-nav-3" class="products-slick-nav"></div>
+								</div>
+
+								<div id="Accessories" class="tab-pane">
+									<div class="products-slick" data-nav="#slick-nav-2">
+										<!-- product -->
+										{% for lap in Accessories %}
+										<div class="product">
+											<div class="product-img">
+												<img src="{{lap.ImageURL}}" style="width: 24rem;height: 16rem;">
+												<div class="product-label">
+													<span class="new">NEW</span>
+												</div>
+											</div>
+											<div class="product-body">
+												<p class="product-category">{{lap.category}}</p>
+												<h3 class="product-name"><a href="{% url 'productview' lap.id %}">{{lap.name}}</a></h3>
+												<h4 class="product-price">${{lap.newprice}}<del class="product-old-price">(${{lap.oldprice}})</del></h4>
+				
+											</div>
+											<div class="add-to-cart">
+												<button data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+											</div>
+										</div>
+										<!-- /product -->
+										{% endfor %}
+									</div>
+									<div id="slick-nav-2" class="products-slick-nav"></div>
+								</div>
+
 								<!-- /tab -->
 								
 							</div>
@@ -82,13 +166,13 @@
 							<ul class="hot-deal-countdown">
 								<li>
 									<div>
-										<h3>03</h3>
+										<h3>05</h3>
 										<span>Days</span>
 									</div>
 								</li>
 								<li>
 									<div>
-										<h3>13</h3>
+										<h3>20</h3>
 										<span>Hours</span>
 									</div>
 								</li>
@@ -107,7 +191,7 @@
 							</ul>
 							<h2 class="text-uppercase">hot deal this week</h2>
 							<p>New Collection Up to 50% OFF</p>
-							<a class="primary-btn cta-btn" href="#">Shop now</a>
+							<a class="primary-btn cta-btn" href="">Shop now</a>
 						</div>
 					</div>
 				</div>
@@ -127,13 +211,13 @@
 					<!-- section title -->
 					<div class="col-md-12">
 						<div class="section-title">
-							<h3 class="title">Top selling</h3>
+							<h3 class="title">Top Selling</h3>
 							<div class="section-nav">
 								<ul class="section-tab-nav tab-nav">
-									<li class="active"><a data-toggle="tab" href="#Laptop">Laptops</a></li>
-									<li><a data-toggle="tab" href="#Smartphone">Smartphones</a></li>
-									<li><a data-toggle="tab" href="#Accessories">Accessories</a></li>
-									<li><a data-toggle="tab" href="#pc">PC</a></li>
+									<li class="active"><a data-toggle="tab" href="#al">All</a></li>
+									<li><a data-toggle="tab" href="#Lap">Laptops</a></li>
+									<li><a data-toggle="tab" href="#Smart">Smartphones</a></li>
+									<li><a data-toggle="tab" href="#Access">Accessories</a></li>
 								</ul>
 							</div>
 						</div>
@@ -141,127 +225,134 @@
 					<!-- /section title -->
 
 					<!-- Products tab & slick -->
+					
 					<div class="col-md-12">
 						<div class="row">
+							
 							<div class="products-tabs">
+							
 								<!-- tab -->
-								<div id="Laptop" class="tab-pane fade in active">
-									<div class="products-slick" data-nav="#slick-nav-2">
+								<div id="al" class="tab-pane fade in active">
+									<div class="products-slick" data-nav="#slick-nav-6">
 										<!-- product -->
-										{% for Laptop in Laptop %}
+										{% for lap in productitems %}
 										<div class="product">
 											<div class="product-img">
-												<img src="{{Laptop.ImageURL}}" style="width: 24rem;height: 16rem;">
+												<img src="{{lap.ImageURL}}" style="width: 24rem;height: 16rem;">
 												<div class="product-label">
 													<span class="sale">-30%</span>
 												</div>
 											</div>
 											<div class="product-body">
-												<p class="product-category">{{Laptop.category}}</p>
-												<h3 class="product-name"><a href="{% url 'productview' Laptop.id %}">{{Laptop.name}}</a></h3>
-												<h4 class="product-price">${{Laptop.newprice}}<del class="product-old-price">(${{Laptop.oldprice}})</del></h4>
+												<p class="product-category">{{lap.category}}</p>
+												<h3 class="product-name"><a href="{% url 'productview' lap.id %}">{{lap.name}}</a></h3>
+												<h4 class="product-price">${{lap.newprice}}<del class="product-old-price">(${{lap.oldprice}})</del></h4>
+				
 											</div>
 											<div class="add-to-cart">
-												<button data-product="{{Laptop.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<button data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
-										{% endfor %}
 										<!-- /product -->
+										{% endfor %}
 									</div>
-									<div id="slick-nav-2" class="products-slick-nav"></div>
+									<div id="slick-nav-6" class="products-slick-nav"></div>
 								</div>
-								<!-- /tab -->
-								<!-- tab -->
-								<div id="Smartphone" class="tab-pane fade in active">
-									<div class="products-slick" data-nav="#slick-nav-2">
+
+								<div id="Lap" class="tab-pane">
+									<div class="products-slick" data-nav="#slick-nav-7">
 										<!-- product -->
-										{% for Smartphone in Smartphone %}
+										{% for lap in Laptop %}
 										<div class="product">
 											<div class="product-img">
-												<img src="{{Smartphone.ImageURL}}" style="width: 24rem;height: 16rem;">
+												<img src="{{lap.ImageURL}}" style="width: 24rem;height: 16rem;">
 												<div class="product-label">
 													<span class="sale">-30%</span>
 												</div>
 											</div>
 											<div class="product-body">
-												<p class="product-category">{{Smartphone.category}}</p>
-												<h3 class="product-name"><a href="{% url 'productview' Smartphone.id %}">{{Smartphone.name}}</a></h3>
-												<h4 class="product-price">${{Smartphone.newprice}}<del class="product-old-price">(${{Smartphone.oldprice}})</del></h4>
+												<p class="product-category">{{lap.category}}</p>
+												<h3 class="product-name"><a href="{% url 'productview' lap.id %}">{{lap.name}}</a></h3>
+												<h4 class="product-price">${{lap.newprice}}<del class="product-old-price">(${{lap.oldprice}})</del></h4>
+				
 											</div>
 											<div class="add-to-cart">
-												<button data-product="{{Smartphone.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<button data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
-										{% endfor %}
 										<!-- /product -->
+										{% endfor %}
 									</div>
-									<div id="slick-nav-2" class="products-slick-nav"></div>
+									<div id="slick-nav-7" class="products-slick-nav"></div>
 								</div>
-								<!-- /tab -->
-								<!-- tab -->
-								<div id="Accessories" class="tab-pane fade in active">
-									<div class="products-slick" data-nav="#slick-nav-2">
+
+								<div id="Smart" class="tab-pane">
+									<div class="products-slick" data-nav="#slick-nav-8">
 										<!-- product -->
-										{% for Accessories in Accessories %}
+										{% for lap in Smartphone %}
 										<div class="product">
 											<div class="product-img">
-												<img src="{{Accessories.ImageURL}}" style="width: 24rem;height: 16rem;">
+												<img src="{{lap.ImageURL}}" style="width: 24rem;height: 16rem;">
 												<div class="product-label">
 													<span class="sale">-30%</span>
 												</div>
 											</div>
 											<div class="product-body">
-												<p class="product-category">{{Accessories.category}}</p>
-												<h3 class="product-name"><a href="{% url 'productview' Accessories.id %}">{{Accessories.name}}</a></h3>
-												<h4 class="product-price">${{Accessories.newprice}}<del class="product-old-price">(${{Accessories.oldprice}})</del></h4>
+												<p class="product-category">{{lap.category}}</p>
+												<h3 class="product-name"><a href="{% url 'productview' lap.id %}">{{lap.name}}</a></h3>
+												<h4 class="product-price">${{lap.newprice}}<del class="product-old-price">(${{lap.oldprice}})</del></h4>
+				
 											</div>
 											<div class="add-to-cart">
-												<button data-product="{{Accessories.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<button data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
-										{% endfor %}
 										<!-- /product -->
+										{% endfor %}
 									</div>
-									<div id="slick-nav-2" class="products-slick-nav"></div>
+									<div id="slick-nav-8" class="products-slick-nav"></div>
 								</div>
-								<!-- /tab -->
-								<!-- tab -->
-								<div id="pc" class="tab-pane fade in active">
-									<div class="products-slick" data-nav="#slick-nav-2">
+
+								<div id="Access" class="tab-pane">
+									<div class="products-slick" data-nav="#slick-nav-9">
 										<!-- product -->
-										{% for pc in pc %}
+										{% for lap in Accessories %}
 										<div class="product">
 											<div class="product-img">
-												<img src="{{pc.ImageURL}}" style="width: 24rem;height: 16rem;">
+												<img src="{{lap.ImageURL}}" style="width: 24rem;height: 16rem;">
 												<div class="product-label">
 													<span class="sale">-30%</span>
 												</div>
 											</div>
 											<div class="product-body">
-												<p class="product-category">{{pc.category}}</p>
-												<h3 class="product-name"><a href="{% url 'productview' pc.id %}">{{pc.name}}</a></h3>
-												<h4 class="product-price">${{pc.newprice}}<del class="product-old-price">(${{pc.oldprice}})</del></h4>
+												<p class="product-category">{{lap.category}}</p>
+												<h3 class="product-name"><a href="{% url 'productview' lap.id %}">{{lap.name}}</a></h3>
+												<h4 class="product-price">${{lap.newprice}}<del class="product-old-price">(${{lap.oldprice}})</del></h4>
+				
 											</div>
 											<div class="add-to-cart">
-												<button data-product="{{pc.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<button data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
-										{% endfor %}
 										<!-- /product -->
+										{% endfor %}
 									</div>
-									<div id="slick-nav-2" class="products-slick-nav"></div>
+									<div id="slick-nav-9" class="products-slick-nav"></div>
 								</div>
+
 								<!-- /tab -->
+								
 							</div>
 						</div>
 					</div>
-					<!-- /Products tab & slick -->
+					<!-- Products tab & slick -->
 				</div>
 				<!-- /row -->
 			</div>
 			<!-- /container -->
 		</div>
 		<!-- /SECTION -->
+
 
 		<!-- SECTION -->
 		<div class="section">
@@ -271,7 +362,7 @@
 				<div class="row">
 					<div class="col-md-4 col-xs-6">
 						<div class="section-title">
-							<h4 class="title">Top selling</h4>
+							<h4 class="title">Best selling Laptop</h4>
 							<div class="section-nav">
 								<div id="slick-nav-3" class="products-slick-nav"></div>
 							</div>
@@ -280,8 +371,8 @@
 						<div class="products-widget-slick" data-nav="#slick-nav-3">
 							<div>
 								<!-- product widget -->
-								{% for product in productitems %}
-								{% if forloop.first %}
+								{% for product in Laptop|slice:":2" %}
+							
 
 								<div class="product-widget">
 									<div class="product-img">
@@ -293,7 +384,7 @@
 										<h4 class="product-price">${{product.newprice}}<del class="product-old-price">(${{product.oldprice}})</del></h4>
 									</div>
 								</div>
-									{% endif %}
+									
 								{% endfor %}
 								<!-- /product widget -->
 								
@@ -303,7 +394,7 @@
 
 					<div class="col-md-4 col-xs-6">
 						<div class="section-title">
-							<h4 class="title">Top selling</h4>
+							<h4 class="title">Best selling Smartphone</h4>
 							<div class="section-nav">
 								<div id="slick-nav-4" class="products-slick-nav"></div>
 							</div>
@@ -312,9 +403,7 @@
 						<div class="products-widget-slick" data-nav="#slick-nav-4">
 							<div>
 								<!-- product widget -->
-								{% for product in productitems %}
-								{% if forloop.first %}
-
+								{% for product in Smartphone|slice:":2" %}
 								<div class="product-widget">
 									<div class="product-img">
 										<img src="{{product.ImageURL}}" alt="">
@@ -325,7 +414,6 @@
 										<h4 class="product-price">${{product.newprice}}<del class="product-old-price">(${{product.oldprice}})</del></h4>
 									</div>
 								</div>
-									{% endif %}
 								{% endfor %}
 								<!-- /product widget -->
 
@@ -337,7 +425,7 @@
 
 					<div class="col-md-4 col-xs-6">
 						<div class="section-title">
-							<h4 class="title">Top selling</h4>
+							<h4 class="title">Best selling Accessory</h4>
 							<div class="section-nav">
 								<div id="slick-nav-5" class="products-slick-nav"></div>
 							</div>
@@ -346,9 +434,7 @@
 						<div class="products-widget-slick" data-nav="#slick-nav-5">
 							<div>
 								<!-- product widget -->
-								{% for product in productitems %}
-								{% if forloop.first %}
-
+								{% for product in Accessories|slice:":2" %}
 								<div class="product-widget">
 									<div class="product-img">
 										<img src="{{product.ImageURL}}" alt="">
@@ -359,7 +445,6 @@
 										<h4 class="product-price">${{product.newprice}}<del class="product-old-price">(${{product.oldprice}})</del></h4>
 									</div>
 								</div>
-									{% endif %}
 								{% endfor %}
 								<!-- /product widget -->
 

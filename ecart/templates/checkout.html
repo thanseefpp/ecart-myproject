@@ -131,6 +131,8 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 	var total ='{{order.get_cart_total}}'
+	var payment_status='razorpay'
+
 	var options = {
 		"key": "rzp_test_eMnSXZs7JW5fj7", // Enter the Key ID generated from the Dashboard
 		"amount": total, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -140,8 +142,7 @@
 		"image": "https://example.com/your_logo",
 		"order_id": "{{order_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
 		"handler": function (response){
-			
-			submitFormData()
+			submitFormData(payment_status)
 		},
 		"prefill": {
 			"name": "Gaurav Kumar",
@@ -166,6 +167,7 @@
 	<script>
 		// Render the PayPal button into #paypal-button-container
 		var total = '{{order.get_cart_total}}'
+		var payment_status='paypal'
 
 		paypal.Buttons({
 			
@@ -185,7 +187,7 @@
 				return actions.order.capture().then(function(details) {
 					// Show a success message to the buyer
 					// alert('Transaction completed by ' + details.payer.name.given_name + '!');
-					submitFormData()
+					submitFormData(payment_status)
 				});
 			}
 
@@ -196,7 +198,6 @@
 	<script type="text/javascript">
 		var shipping = '{{order.shipping}}'
 		var total = '{{order.get_cart_total}}'
-
 		
 		if (user != 'AnonymousUser'){
 		 	document.getElementById('user-info').innerHTML = ''
@@ -218,14 +219,9 @@
 			// submitFormData()
 	    })
 
-		
-	    document.getElementById('cod').addEventListener('click', function(e){
-	    	submitFormCod()
-	    })
-	    
-
-	    function submitFormData(){
+	    function submitFormData(payment_status){
 	    	console.log('Payment button clicked')
+			console.log(payment_status)
 
 	    	var userFormData = {
 				'name':null,
@@ -238,6 +234,7 @@
 				'city':null,
 				'state':null,
 				'zipcode':null,
+				'payment_status':null,
 			}
 
 			if (shipping != 'False'){
@@ -245,6 +242,7 @@
 		    	shippingInfo.city = form.city.value
 		    	shippingInfo.state = form.state.value
 				shippingInfo.zipcode = form.zipcode.value
+				shippingInfo.payment_status = payment_status
 	    	}
 
 	    	if (user == 'AnonymousUser'){
@@ -277,8 +275,41 @@
 
 				})
 	    }
+	</script>
+
+	<script>
+		var shipping = '{{order.shipping}}'
+		var total = '{{order.get_cart_total}}'
+
+		
+		if (user != 'AnonymousUser'){
+		 	document.getElementById('user-info').innerHTML = ''
+		}
+
+		if (shipping == 'False' && user != 'AnonymousUser'){
+			//Hide entire form if user is logged in and shipping is false
+			document.getElementById('form-wrapper').classList.add("hidden");
+			//Show payment if logged in user wants to buy an item that does not require shipping
+			document.getElementById('payment-info').classList.remove("hidden");
+		}
+
+		var form = document.getElementById('form')
+		form.addEventListener('submit', function(e){
+	    	e.preventDefault()
+	    	console.log('Form Submitted...')
+	    	document.getElementById('form-button').classList.add("hidden");
+			document.getElementById('payment-info').classList.remove("hidden");
+			// submitFormData()
+	    })
+
+
+		document.getElementById('cod').addEventListener('click', function(e){
+	    	submitFormCod()
+	    })
+
 	    function submitFormCod(){
 	    	console.log('Payment button clicked')
+			console.log()
 
 	    	var userFormData = {
 				'name':null,
@@ -291,6 +322,7 @@
 				'city':null,
 				'state':null,
 				'zipcode':null,
+				'payment_status':null,
 			}
 
 			if (shipping != 'False'){
