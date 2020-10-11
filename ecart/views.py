@@ -679,11 +679,11 @@ def addproduct(request):
         imagefull_4 = request.FILES.get('filefour')
         description = request.POST['description']
         print('data', image_url)
-        value = image_data.strip('data:image/png;base64,')
-        format, imgstr = image_data.split(';base64,')
+        value = image_url.strip('data:image/png;base64,')
+        format, imgstr = image_url.split(';base64,')
         ext = format.split('/')[-1]
         data = ContentFile(base64.b64decode(imgstr),name='temp.' + ext)
-        prod = Product(imagefull_4=imagefull_4,imagefull_3=imagefull_3,imagefull_2=imagefull_2,imagefull_1=imagefull_1,image_url=image_url,description=description,name=name,product_quantity=product_quantity,category=category,features=features,oldprice=oldprice,newprice=newprice)
+        prod = Product(imagefull_4=imagefull_4,imagefull_3=imagefull_3,imagefull_2=imagefull_2,imagefull_1=imagefull_1,image_url = data,description=description,name=name,product_quantity=product_quantity,category=category,features=features,oldprice=oldprice,newprice=newprice)
         prod.save();
         return redirect('adminpd')
     else:
