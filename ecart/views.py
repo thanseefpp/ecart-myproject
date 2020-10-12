@@ -399,17 +399,48 @@ def ordersview(request):
         items=[]
         try:
             for order in orders:
-                orderitems=OrderItem.objects.filter(order=order)
+                orderitems=OrderItem.objects.filter(order=order,product__isnull=False)
                 for orderitem in orderitems:
                     items.append(orderitem)
         except:
             order=0
             items=0
-        zipitems=zip(items,orders)
-        return render(request,'ordersview.html',{'zipitems':zipitems,'cartItems':cartItems})
+        
+        zipitems=zip(orders)
+        return render(request,'ordersview.html',{'zipitems':zipitems,'cartItems':cartItems,'items':items})
     else:
         return render(request,'index.html')
 
+
+# def orders(request):
+#     customer = request.user.customer
+#     print(customer)
+#     order = Order.objects.filter(customer = customer,complete=True)
+#     items = []
+#     for i in order:
+#         details = OrderItem.objects.filter(order = i,product__isnull=False)
+#         print('details:',details)
+#         for j in details:
+#             print('j:',j.product)
+#             items.append(j)
+#     if request.user.is_authenticated:
+#         order, created = Order.objects.get_or_create(customer = customer, complete = False)
+        
+#         cartItems = order.get_cart_items
+#         context = {'cartItems':cartItems}
+#     else:
+#         try:
+#             cart = json.loads(request.COOKIES['cart'])
+#         except:
+#             cart = {}
+#             print('cart:', cart)  
+#             items = []
+#         order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}
+#         cartItems = order['get_cart_items']
+#         for i in cart:
+#             cartItems += cart[i]['quantity']   
+#     context = {'cartItems':cartItems,'items':items}
+#     return render(request, 'store/orders.html', context)
 
 
 def productview(request,id):
@@ -557,13 +588,14 @@ def adminds(request):
         payment = []
         paypal = ShippingAddress.objects.filter(payment_status='paypal')
         razor = ShippingAddress.objects.filter(payment_status='razorpay')
-
+        cod = ShippingAddress.objects.filter(payment_status='cod')
         pay = paypal.count()
         raz = razor.count()
-        print('paypal:',paypal.count())
-        print('razor:',razor.count())
+        co = cod.count()
+        print('paypal:',pay,'RaZ:',raz,'cod:',co)
         payment.append(raz)
         payment.append(pay)
+        payment.append(co)
         print('payment checking:',payment)
         productitems = Product.objects.all()
         orderitem = Order.objects.count()
@@ -630,7 +662,6 @@ def customer(request):
     return render(request,'customer.html', {'value':values})
 
 
-
 def customerdel(request,id):
     customer=Customer.objects.get(id=id)
     customer.delete()
@@ -641,18 +672,6 @@ def user(request):
     user = User.objects.all()
     context= {'user':user}
     return render(request,'user.html',context)
-
-
-
-# def adminproduct(request):
-#     if request.session.has_key('password'):
-#         password = request.session['password']
-#         productitems = Product.objects.all()
-#         return render(request, 'adminproduct.html', {'productitems' : productitems})
-#     else:
-#         return render(request,'adminlogin.html')
-
-
 
 
 #admin 

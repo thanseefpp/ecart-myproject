@@ -25,7 +25,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item,order in zipitems %}
+                    {% for item in items %}
                     <tr>
                         <td class="cart_product">
                             <a href=""><img style="width: 4rem;height: 4rem;" src="{{item.product.ImageURL}}" alt=""></a>
@@ -38,14 +38,14 @@
                         </td>
                         <td class="cart_quantity">
                             <div class="cart_quantity_button">
-                                <p>${{order.get_cart_total}}</p>
+                                <p>${{item.get_total}}</p>
                             </div>
                         </td>
                         <td class="cart_total">
-                            <p class="cart_total_price">{{order.date_orderd.date}}</p>
+                            <p class="cart_total_price">{{item.order.date_orderd.date}}</p>
                         </td>
                         <td class="cart_total">
-                          <p class="cart_total_price">{{order.order_status}}</p>
+                          <p class="cart_total_price">{{item.order.order_status}}</p>
                       </td>
                     </tr>
                     {% endfor %}
