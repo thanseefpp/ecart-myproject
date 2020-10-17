@@ -28,7 +28,7 @@ urlpatterns = [
     path('user/',views.user,name='user'),
     path('ordersview/',views.ordersview,name='ordersview'),
     path('adorderitem/',views.adorderitem,name='adorderitem'),
-    path('approve/<int:id>/',views.approve,name='approve'),
+    path('approve/',views.approve,name='approve'),
     path('customerdel/<int:id>/',views.customerdel,name='customerdel'),
     path('cod/',views.cod,name='cod'),
     path('getshipping/',views.Getshipping.as_view()),

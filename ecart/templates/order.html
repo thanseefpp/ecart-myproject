@@ -97,32 +97,45 @@
                     <th scope="col" class="sort" data-sort="status">Order_Date</th>
                     <th scope="col">Total</th>
                     <th scope="col" class="sort" data-sort="completion">Status</th>
-                    <th scope="col" class="text-right" style="padding-right: 53px;">Action</th>
                   </tr>
                 </thead>
                 <tbody class="list">
-                  {% for order in order %}
+                  {% for order in orders %}
                   {% if order.complete == True %}
-                  <form action="{% url 'approve' order.id %}" method="POST">
-                    {% csrf_token %}
                   <tr>
                     <th scope="row">{{order.id}}</th>
                     <td>{{order.customer}}</td>
                     <td>{{order.date_orderd}}</td>
                     <td>{{order.get_cart_total}}</td>
-                    <td class="budget">
-                      <select id="course" name="category" class="input-xlarge">
-                        <option>{{order.order_status}}</option>
-                        <option>Shipped</option>
-                        <option>Complete</option>
-                        <option>Out for delivery</option>
-                    </select>
+                    <td>
+                      <div class="btn-group">
+                        <button type="button" class="actual_status btn btn-info btn-md">{{order.order_status}}</button>
+                        <button type="button" class="btn btn-info btn-md dropdown-toggle px-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    
+                        <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                            <div class="dropdown-menu">
+                                {% if order.order_status == 'Pending' %}
+                                  <button  data-id="{{order.id}}"  data-status="Shipped" class=" change_status dropdown-item" >Shipped</button>
+                                  <button  data-id="{{order.id}}"  data-status="Complete" class=" change_status dropdown-item" >Complete</button>    
+                                  <button data-id="{{order.id}}"  data-status="Out for delivery" class=" change_status dropdown-item" >Out for delivery</button>
+                                {% elif order.order_status == 'Shipped' %}
+                                  <button  data-id="{{order.id}}"  data-status="Pending" class=" change_status dropdown-item" >Pending</button>
+                                  <button  data-id="{{order.id}}"  data-status="Complete" class=" change_status dropdown-item" >Complete</button>    
+                                  <button data-id="{{order.id}}"  data-status="Out for delivery" class=" change_status dropdown-item" >Out for delivery</button>
+                                {% elif order.order_status == 'Complete' %}
+                                  <button  data-id="{{order.id}}"  data-status="Shipped" class=" change_status dropdown-item" >Shipped</button>
+                                  <button  data-id="{{order.id}}"  data-status="Pending" class=" change_status dropdown-item" >Pending</button>    
+                                  <button data-id="{{order.id}}"  data-status="Out for delivery" class=" change_status dropdown-item" >Out for delivery</button>
+                                {% elif order.order_status == 'Out for delivery' %}
+                                  <button  data-id="{{order.id}}"  data-status="Shipped" class=" change_status dropdown-item" >Shipped</button>
+                                  <button  data-id="{{order.id}}"  data-status="Complete" class=" change_status dropdown-item" >Complete</button>    
+                                  <button data-id="{{order.id}}"  data-status="Pending" class=" change_status dropdown-item" >Pending</button>
+                                {%endif%}
+                            </div>
+                    </div>  
                     </td>
-                      <td class="text-right">
-                      <button type="submit" class="btn btn-info btn-md">Update</button>
-                      </td>
                   </tr>
-                  </form>
                   {% endif %}
                   {% endfor %}
                 </tbody>
@@ -133,6 +146,8 @@
       </div>
     </div>
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.min.js"></script>
 <script>
   function myFunction() {
   // Declare variables
@@ -156,4 +171,60 @@
   }
 }
 </script>
+
+<script>
+
+     
+  function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+  
+      /*var btn = document.getElementById('order_status1')
+      btn.addEventListener('click',function(){
+          alert('ok')
+          var top = document.getElementById('actual_status')
+          top.innerHTML = 'changed'
+      })*/
+      var statusBtns = document.getElementsByClassName('change_status')
+  
+      for(var i = 0; i < statusBtns.length; i++){
+          statusBtns[i].addEventListener('click', function(){
+          var orderId = this.dataset.id
+          var category = this.dataset.category
+          console.log('orderId:', orderId, 'category :', category)
+          var top = document.getElementsByClassName('actual_status')
+          top[orderId-1].innerHTML = category
+          
+          
+          $.ajax({
+              url: '/approve/',
+              type: 'post',
+              data: {
+                order_id: orderId,
+                order_status:category,
+                csrfmiddlewaretoken: csrftoken
+              },
+  
+          });
+  
+  
+          })
+      }
+  
+  
+</script>  
+
 {% endblock %}

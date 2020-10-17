@@ -212,8 +212,7 @@ def checkout(request):
             print('User:',user)
             customer= Customer.objects.get(user=user)
             print("customer:",customer)
-            ship = ShippingAddress.objects.filter(customer=customer)
-            print('shipping',ship)
+            ship = ShippingAddress.objects.filter(customer=customer).distinct('address')
         else:
             order_amount=order['get_cart_total']
             order_amount *= 100
@@ -317,7 +316,7 @@ def processOrder(request):
         order.save()
 
         if order.shipping == True:
-            ShippingAddress.objects.get_or_create(
+            ship, created = ShippingAddress.objects.get_or_create(
                 customer=customer,
                 order=order,
                 address=data['shipping']['address'],
@@ -325,7 +324,7 @@ def processOrder(request):
                 state=data['shipping']['state'],
                 zipcode=data['shipping']['zipcode'],
                 payment_status=data['shipping']['payment_status'],
-            )        
+            )
     else:
         customer,order=guestUser(request,data)
 
@@ -576,22 +575,40 @@ def adminds(request):
 
 def orders(request):
     if request.session.has_key('password'):
-        password = request.session['password']
         order = Order.objects.all()
-        return render(request,'order.html', {'order':order})
+        return render(request,'order.html', {'orders':order})
     else:
         return render(request,'adminlogin.html')
 
 
-def approve(request,id):
+def approve(request):
     if request.session.has_key('password'):
-        password = request.session['password']
-        category=request.POST['category']
+        id = request.POST.get('order_id')
+        category = request.POST.get('order_status')
+        print(id)
+
         order=Order.objects.get(id=id)
+        print(order)
         order.order_status = category
         order.save();
         return redirect('orders')
 
+
+# def update_order(request):
+#     id = request.POST.get('order_id')
+#     status = request.POST.get('order_status')
+#     print(id)
+
+#     order = Order.objects.get(id=id)
+#     order.order_status = status
+#     order.save();
+
+#     category=request.POST['category']
+#     order=Order.objects.get(id=id)
+#     order.order_status = category
+#     order.save();
+        
+#     return redirect('orders_view')
 
 def adorderitem(request):
     if request.session.has_key('password'):
