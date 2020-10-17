@@ -22,6 +22,7 @@
                         <td class="quantity">Total Price</td>
                         <td class="total">Date</td>
                         <td>Status</td>
+                        <td>Track Product</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,6 +47,9 @@
                         </td>
                         <td class="cart_total">
                           <p class="cart_total_price">{{item.order.order_status}}</p>
+                      </td>
+                      <td>
+                        <a href="{% url 'track' item.order_id %}" ><button class="primary-btn order-submit">Track</button></a>
                       </td>
                     </tr>
                     {% endfor %}

@@ -32,7 +32,7 @@ urlpatterns = [
     path('customerdel/<int:id>/',views.customerdel,name='customerdel'),
     path('cod/',views.cod,name='cod'),
     path('getshipping/',views.Getshipping.as_view()),
-    path('track/',views.track,name='track'),
+    path('track/<int:id>/',views.track,name='track'),
 
 ]
 

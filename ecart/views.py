@@ -249,8 +249,18 @@ class Getshipping(View):
         return redirect('/')
 
 
-def track(request):
-    return render(request,'track.html')
+def track(request,id):
+    if request.user.is_authenticated:
+        data = cartData(request)
+        cartItems = data['cartItems']
+        customer = request.user.customer
+        orders = Order.objects.get(id=id)
+        print(orders.order_status)
+
+        return render(request,'track.html',{'orders':orders})
+    else:
+        return render(request,'index.html')
+    
 
 
 def cart(request):

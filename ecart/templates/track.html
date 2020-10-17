@@ -1,190 +1,246 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<link rel="stylesheet"href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-<link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+<div style="margin: 210px;">
+    <h2 style="padding-left: 339px;">Product Track</h2>
 
-<section class="status">
-    <div class="container mx-auto">
-        <div class="status-box w-full lg:w-2/3 mx-auto">
-            <div class="flex items-center justify-between mb-12">
-                <h1 class="text-xl font-bold">Track delivery status</h1>
-                <h6 class="bg-white py-1 rounded-full px-4 text-green-600 text-xs">Python template code of order id</h6>
-                <input id="hiddenInput" type="hidden" value="<%= JSON.stringify(order) %>">
+        <div style="width: 200px;height: 200px;padding-left: 213px;padding-top: 40px;">
+            <div class="md-stepper-horizontal blue">
+                {% if orders.order_status == 'Pending' %}
+                    <div class="md-step active">
+                        <div class="md-step-circle"><span>1</span></div>
+                        <div class="md-step-title">Pending</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step ">
+                        <div class="md-step-circle"><span>2</span></div>
+                        <div class="md-step-title">Shipped</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step">
+                        <div class="md-step-circle"><span>3</span></div>
+                        <div class="md-step-title">Complete</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step">
+                        <div class="md-step-circle"><span>4</span></div>
+                        <div class="md-step-title">Out for delivery</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                {% elif orders.order_status == 'Shipped' %}
+                    <div class="md-step active done">
+                        <div class="md-step-circle"><span>1</span></div>
+                        <div class="md-step-title">Pending</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step active">
+                        <div class="md-step-circle"><span>2</span></div>
+                        <div class="md-step-title">Shipped</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step">
+                        <div class="md-step-circle"><span>3</span></div>
+                        <div class="md-step-title">Complete</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step">
+                        <div class="md-step-circle"><span>4</span></div>
+                        <div class="md-step-title">Out for delivery</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                {% elif orders.order_status == 'Complete' %}
+                    <div class="md-step active done">
+                        <div class="md-step-circle"><span>1</span></div>
+                        <div class="md-step-title">Pending</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step active done">
+                        <div class="md-step-circle"><span>2</span></div>
+                        <div class="md-step-title">Shipped</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step active">
+                        <div class="md-step-circle"><span>3</span></div>
+                        <div class="md-step-title">Complete</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step">
+                        <div class="md-step-circle"><span>4</span></div>
+                        <div class="md-step-title">Out for delivery</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                {% elif orders.order_status == 'Out for delivery' %}
+                    <div class="md-step active done">
+                        <div class="md-step-circle"><span>1</span></div>
+                        <div class="md-step-title">Pending</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step active done">
+                        <div class="md-step-circle"><span>2</span></div>
+                        <div class="md-step-title">Shipped</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step active done">
+                        <div class="md-step-circle"><span>3</span></div>
+                        <div class="md-step-title">Complete</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step active">
+                        <div class="md-step-circle"><span>4</span></div>
+                        <div class="md-step-title">Out for delivery</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                {% endif %}
             </div>
-            <ul>
-                <li class="status_line text-sm md:text-xl pb-16 " data-status="order_placed"><span>Order Placed</span>
-                </li>
-                <li class="status_line text-sm md:text-xl pb-16 " data-status="confirmed"><span>Order confirmation</span>
-                </li>
-                <li class="status_line text-sm md:text-xl pb-16 " data-status="prepared"><span>Preparation</span></li>
-                <li class="status_line text-sm md:text-xl pb-16 " data-status="delivered"><span>Out for delivery </span>
-                </li>
-                <li class="status_line text-sm md:text-xl" data-status="completed"><span>Complete</span></li>
-            </ul>
-        </div>
-    </div>
-</section>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment.min.js"></script>
-<script>
-    let statuses = document.querySelectorAll('.status_line')
-    let order = document.getElementById('hiddenInput') ? document.getElementById('hiddenInput').value : null;
-    order = JSON.parse(order);
-    let time = document.createElement('small');
-    updateStatus(order);
-    function updateStatus(order) {
-        statuses.forEach((status) => {
-            status.classList.remove('step-completed')
-            status.classList.remove('current')
-        })
-        let stepCompleted = true;
-        statuses.forEach((status) => {
-            let dataProp = status.dataset.status;
-            if (stepCompleted) {
-                status.classList.add('step-completed');
-            }
-            if (dataProp === order.status) {
-                
-                stepCompleted = false;
-                time.innerText = moment(order.updatedAt).format('hh:mm A')
-                status.appendChild(time)
-                if (status.nextElementSibling) {
-                    status.nextElementSibling.classList.add('current');
-                }
-            }
-        })
-    }
-</script>
+            </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.min.js"></script>
+
 <style>
-    section.status {
-        background: #f0f0f0;
-        min-height: calc(100vh - 86px);
-    }
-
-    .status-box {
-        padding: 60px 0 0;
-    }
-
-    .status-box ul {
-        margin-left: 84px;
-    }
-
-    .status-box ul li span {
-        position: relative;
-        padding-left: 20px;
-    }
-
-    .status-box ul li span:after {
-        content: '';
-        position: absolute;
-        left: -10px;
-        top: 50%;
-        background: #232323;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        transform: translateY(-50%);
-        box-shadow: 0 0 1px 1px #232323;
-    }
-
-    .status-box ul li span:before {
-        font-family: "Line Awesome Free";
-        font-size: 46px;
-        font-weight: 600;
-        position: absolute;
-        left: -90px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: inherit;
-    }
-
-    .status-box ul li:nth-child(1) span:before {
-        content: '\f46c';
-    }
-
-    .status-box ul li:nth-child(2) span:before {
-        content: '\f560';
-    }
-
-    .status-box ul li:nth-child(3) span:before {
-        content: '\f818';
-    }
-
-    .status-box ul li:nth-child(4) span:before {
-        content: '\f0d1';
-    }
-
-    .status-box ul li:nth-child(5) span:before {
-        content: '\f582';
-    }
-
-    .status-box ul li {
-        position: relative;
-    }
-
-    /* line */
-    .status-box ul li:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -6px;
-        width: 2px;
-        height: 100%;
-        background: #232323;
-        margin-top: 10px;
-    }
-
-    /* Last dot */
-    .status-box ul li:nth-child(5) span:after {
-        box-shadow: 0 20px 1px 20px #F8F8F8;
-    }
-
-    /* line */
-    .status-box ul li.step-completed:before {
-        background: #ccc;
-    }
-
-    /* dots */
-    .status-box ul li.step-completed span:after {
-        background: #ccc;
-    }
-
-    /* text */
-    .status-box ul li.step-completed span {
-        color: #ccc;
-    }
-
-    /* Current status */
-    .status-box ul li.current span {
-        color: #FE5F1E;
-    }
-
-    .status-box ul li.current span:after {
-        background: #FE5F1E;
-    }
-
-    .status-box ul li small {
-        float: right;
-        font-size: 14px;
-        margin-top: 8px;
-    }
-
-    @media(max-width:1060px) {
-        .container {
-            max-width: 90%;
-        }
-
-        table {
-            display: block;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-    }
-
-    @media(max-width: 768px) {
-        .status-box ul li span:before {
-            font-size: 34px;
-        }
-    }
+    html {
+	-webkit-font-smoothing: antialiased!important;
+	-moz-osx-font-smoothing: grayscale!important;
+	-ms-font-smoothing: antialiased!important;
+}
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-size:16px;
+  color:#555555; 
+}
+.md-stepper-horizontal {
+	display:table;
+	width:100%;
+	margin:0 auto;
+	background-color:#FFFFFF;
+	box-shadow: 0 3px 8px -6px rgba(0,0,0,.50);
+}
+.md-stepper-horizontal .md-step {
+	display:table-cell;
+	position:relative;
+	padding:24px;
+}
+.md-stepper-horizontal .md-step:hover,
+.md-stepper-horizontal .md-step:active {
+	background-color:rgba(0,0,0,0.04);
+}
+.md-stepper-horizontal .md-step:active {
+	border-radius: 15% / 75%;
+}
+.md-stepper-horizontal .md-step:first-child:active {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+.md-stepper-horizontal .md-step:last-child:active {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+.md-stepper-horizontal .md-step:hover .md-step-circle {
+	background-color:#757575;
+}
+.md-stepper-horizontal .md-step:first-child .md-step-bar-left,
+.md-stepper-horizontal .md-step:last-child .md-step-bar-right {
+	display:none;
+}
+.md-stepper-horizontal .md-step .md-step-circle {
+	width:30px;
+	height:30px;
+	margin:0 auto;
+	background-color:#999999;
+	border-radius: 50%;
+	text-align: center;
+	line-height:30px;
+	font-size: 16px;
+	font-weight: 600;
+	color:#FFFFFF;
+}
+.md-stepper-horizontal.green .md-step.active .md-step-circle {
+	background-color:#00AE4D;
+}
+.md-stepper-horizontal.orange .md-step.active .md-step-circle {
+	background-color:#F96302;
+}
+.md-stepper-horizontal .md-step.active .md-step-circle {
+	background-color: rgb(33,150,243);
+}
+.md-stepper-horizontal .md-step.done .md-step-circle:before {
+	font-family:'FontAwesome';
+	font-weight:100;
+	content: "\f00c";
+}
+.md-stepper-horizontal .md-step.done .md-step-circle *,
+.md-stepper-horizontal .md-step.editable .md-step-circle * {
+	display:none;
+}
+.md-stepper-horizontal .md-step.editable .md-step-circle {
+	-moz-transform: scaleX(-1);
+	-o-transform: scaleX(-1);
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+}
+.md-stepper-horizontal .md-step.editable .md-step-circle:before {
+	font-family:'FontAwesome';
+	font-weight:100;
+	content: "\f040";
+}
+.md-stepper-horizontal .md-step .md-step-title {
+	margin-top:16px;
+	font-size:16px;
+	font-weight:600;
+}
+.md-stepper-horizontal .md-step .md-step-title,
+.md-stepper-horizontal .md-step .md-step-optional {
+	text-align: center;
+	color:rgba(0,0,0,.26);
+}
+.md-stepper-horizontal .md-step.active .md-step-title {
+	font-weight: 600;
+	color:rgba(0,0,0,.87);
+}
+.md-stepper-horizontal .md-step.active.done .md-step-title,
+.md-stepper-horizontal .md-step.active.editable .md-step-title {
+	font-weight:600;
+}
+.md-stepper-horizontal .md-step .md-step-optional {
+	font-size:12px;
+}
+.md-stepper-horizontal .md-step.active .md-step-optional {
+	color:rgba(0,0,0,.54);
+}
+.md-stepper-horizontal .md-step .md-step-bar-left,
+.md-stepper-horizontal .md-step .md-step-bar-right {
+	position:absolute;
+	top:36px;
+	height:1px;
+	border-top:1px solid #DDDDDD;
+}
+.md-stepper-horizontal .md-step .md-step-bar-right {
+	right:0;
+	left:50%;
+	margin-left:20px;
+}
+.md-stepper-horizontal .md-step .md-step-bar-left {
+	left:0;
+	right:50%;
+	margin-right:20px;
+}
 </style>
 
 {% endblock %}
+
