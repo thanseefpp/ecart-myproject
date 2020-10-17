@@ -31,6 +31,7 @@ urlpatterns = [
     path('approve/<int:id>/',views.approve,name='approve'),
     path('customerdel/<int:id>/',views.customerdel,name='customerdel'),
     path('cod/',views.cod,name='cod'),
+    path('getshipping/',views.Getshipping.as_view()),
     path('track/',views.track,name='track'),
 
 ]

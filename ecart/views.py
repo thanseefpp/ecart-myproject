@@ -13,6 +13,7 @@ from datetime import *
 import requests
 from .models import *
 from . utils import cookieCart, cartData, guestUser
+from django.views.generic import View
 import razorpay
 import base64
 from PIL import Image
@@ -132,9 +133,9 @@ def index(request):
     Laptop = Product.objects.filter(category='Laptop')
     Smartphone = Product.objects.filter(category='Smartphone')
     Accessories = Product.objects.filter(category='Accessories')
-    pc = Product.objects.filter(category='pc')
-    context = {'productitems' : productitems, 'cartItems':cartItems, 'Laptop':Laptop, 'Smartphone':Smartphone, 'Accessories':Accessories, 'pc':pc}
+    context = {'productitems' : productitems, 'cartItems':cartItems, 'Laptop':Laptop, 'Smartphone':Smartphone, 'Accessories':Accessories}
     return render(request, 'index.html', context)
+
 
 def smartphone(request):
     if request.user.is_authenticated:
@@ -151,8 +152,7 @@ def smartphone(request):
     Laptop = Product.objects.filter(category='Laptop')
     Smartphone = Product.objects.filter(category='Smartphone')
     Accessories = Product.objects.filter(category='Accessories')
-    pc = Product.objects.filter(category='pc')
-    context = {'cartItems':cartItems, 'Laptop':Laptop, 'Smartphone':Smartphone, 'Accessories':Accessories, 'pc':pc}
+    context = {'cartItems':cartItems, 'Laptop':Laptop, 'Smartphone':Smartphone, 'Accessories':Accessories}
     return render(request, 'smartphone.html', context)
 
 
@@ -171,9 +171,9 @@ def accessories(request):
     Laptop = Product.objects.filter(category='Laptop')
     Smartphone = Product.objects.filter(category='Smartphone')
     Accessories = Product.objects.filter(category='Accessories')
-    pc = Product.objects.filter(category='pc')
-    context = {'cartItems':cartItems, 'Laptop':Laptop, 'Smartphone':Smartphone, 'Accessories':Accessories, 'pc':pc}
+    context = {'cartItems':cartItems, 'Laptop':Laptop, 'Smartphone':Smartphone, 'Accessories':Accessories}
     return render(request, 'accessories.html', context)
+
 
 def laptop(request):
     if request.user.is_authenticated:
@@ -190,8 +190,7 @@ def laptop(request):
     Laptop = Product.objects.filter(category='Laptop')
     Smartphone = Product.objects.filter(category='Smartphone')
     Accessories = Product.objects.filter(category='Accessories')
-    pc = Product.objects.filter(category='pc')
-    context = {'cartItems':cartItems, 'Laptop':Laptop, 'Smartphone':Smartphone, 'Accessories':Accessories, 'pc':pc}
+    context = {'cartItems':cartItems, 'Laptop':Laptop, 'Smartphone':Smartphone, 'Accessories':Accessories}
     return render(request, 'laptop.html', context)
 
 
@@ -207,12 +206,15 @@ def checkout(request):
         order_receipt = 'order-rctid-11' 
     
         if request.user.is_authenticated:
-            
             order_amount=order.get_cart_total
             order_amount *= 100
-        
+            user = User.objects.get(username=request.user)
+            print('User:',user)
+            customer= Customer.objects.get(user=user)
+            print("customer:",customer)
+            ship = ShippingAddress.objects.filter(customer=customer)
+            print('shipping',ship)
         else:
-        
             order_amount=order['get_cart_total']
             order_amount *= 100
             
@@ -220,11 +222,31 @@ def checkout(request):
         order_id = response['id']
         order_status = response['status']
 
-        context = {'items':items,'order':order,'cartItems':cartItems,'order_id':order_id}
+        context = {'shipping':ship,'items':items,'order':order,'cartItems':cartItems,'order_id':order_id}
         return render(request, 'checkout.html', context)
     except:
         pass
     return render(request,'checkout.html')
+
+
+class Getshipping(View):
+    def get(self, request):
+        text = request.GET.get('ship_id')
+        print(text)
+
+        shipi = ShippingAddress.objects.get(id=text)
+
+        a = shipi.address
+        b = shipi.city
+        vb = {
+            'address': shipi.address,
+            'city': shipi.city,
+            'state': shipi.state,
+            'zipcode': shipi.zipcode,
+
+        }
+        return JsonResponse({'count2': vb}, status=200)
+        return redirect('/')
 
 
 def track(request):
@@ -285,7 +307,7 @@ def processOrder(request):
         order.save()
 
         if order.shipping == True:
-            ShippingAddress.objects.create(
+            ShippingAddress.objects.get_or_create(
                 customer=customer,
                 order=order,
                 address=data['shipping']['address'],
@@ -296,24 +318,6 @@ def processOrder(request):
             )        
     else:
         customer,order=guestUser(request,data)
-        
-    total = data['form']['total']
-    order.transaction_id = transaction_id
-
-    if float(total) == float(order.get_cart_total):
-        order.complete = True
-    order.save()
-
-    if order.shipping == True:
-        ShippingAddress.objects.create(
-            customer=customer,
-            order=order,
-            address=data['shipping']['address'],
-            city=data['shipping']['city'],
-            state=data['shipping']['state'],
-            zipcode=data['shipping']['zipcode'],
-            payment_status=data['shipping']['payment_status'],
-        )
 
     return JsonResponse('Payment complete', safe=False)
 
@@ -333,37 +337,19 @@ def cod(request):
         order.save()
 
         if order.shipping == True:
-            ShippingAddress.objects.create(
+            ShippingAddress.objects.get_or_create(
                 customer=customer,
                 order=order,
                 address=data['shipping']['address'],
                 city=data['shipping']['city'],
                 state=data['shipping']['state'],
                 zipcode=data['shipping']['zipcode'],
-                payment_status=data['shipping']['payment_status'],
+                payment_Cod=data['shipping']['payment_Cod'],
             )        
     else:
         customer,order=guestUser(request,data)
-        
-    total = data['form']['total']
-    order.transaction_id = transaction_id
 
-    if float(total) == float(order.get_cart_total):
-        order.complete = True
-    order.save()
-
-    if order.shipping == True:
-        ShippingAddress.objects.create(
-            customer=customer,
-            order=order,
-            address=data['shipping']['address'],
-            city=data['shipping']['city'],
-            state=data['shipping']['state'],
-            zipcode=data['shipping']['zipcode'],
-            payment_status=data['shipping']['payment_status'],
-        )
-
-    return JsonResponse('Payment complete', safe=False)
+    return JsonResponse('COD Order complete', safe=False)
 
 
 def logout(request):
@@ -410,37 +396,6 @@ def ordersview(request):
         return render(request,'ordersview.html',{'zipitems':zipitems,'cartItems':cartItems,'items':items})
     else:
         return render(request,'index.html')
-
-
-# def orders(request):
-#     customer = request.user.customer
-#     print(customer)
-#     order = Order.objects.filter(customer = customer,complete=True)
-#     items = []
-#     for i in order:
-#         details = OrderItem.objects.filter(order = i,product__isnull=False)
-#         print('details:',details)
-#         for j in details:
-#             print('j:',j.product)
-#             items.append(j)
-#     if request.user.is_authenticated:
-#         order, created = Order.objects.get_or_create(customer = customer, complete = False)
-        
-#         cartItems = order.get_cart_items
-#         context = {'cartItems':cartItems}
-#     else:
-#         try:
-#             cart = json.loads(request.COOKIES['cart'])
-#         except:
-#             cart = {}
-#             print('cart:', cart)  
-#             items = []
-#         order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}
-#         cartItems = order['get_cart_items']
-#         for i in cart:
-#             cartItems += cart[i]['quantity']   
-#     context = {'cartItems':cartItems,'items':items}
-#     return render(request, 'store/orders.html', context)
 
 
 def productview(request,id):
@@ -509,7 +464,7 @@ def register(request):
                 request.session['id'] = id
                 return render(request,'otp.html')
         else:
-            messages.error(request,'Password wrong')
+            messages.error(request,"Wrong Password")
             return render(request,'register.html',dicti)
     else:
         return render(request, 'register.html')
@@ -541,7 +496,7 @@ def adminlogin(request):
             return redirect('adminds')
 
         else:
-            messages.error(request, '😢 Wrong username/password!')
+            messages.error(request, "😢 Wrong username/password!")
             return redirect(adminlogin)
     else:
         return render(request,'adminlogin.html')
@@ -588,14 +543,14 @@ def adminds(request):
         payment = []
         paypal = ShippingAddress.objects.filter(payment_status='paypal')
         razor = ShippingAddress.objects.filter(payment_status='razorpay')
-        cod = ShippingAddress.objects.filter(payment_status='cod')
+        cod = ShippingAddress.objects.filter(payment_Cod='cod')
         pay = paypal.count()
         raz = razor.count()
-        co = cod.count()
-        print('paypal:',pay,'RaZ:',raz,'cod:',co)
+        cnt = cod.count()
+        print('paypal:',pay,'RaZ:',raz,'cod:',cnt)
         payment.append(raz)
         payment.append(pay)
-        payment.append(co)
+        payment.append(cnt)
         print('payment checking:',payment)
         productitems = Product.objects.all()
         orderitem = Order.objects.count()
@@ -758,84 +713,3 @@ def update(request,id):
     else:
         return render(request, 'updatepd.html', {'product':product})
 
-#crop test mod
-# def add_product(request):
-#     if request.method == 'POST':
-
-#         name = request.POST['name']
-#         price = request.POST['price']
-#         product_type = request.POST['product_type']
-#         image_data =request.POST['image64data']
-#         print('data', image_data)
-#         value = image_data.strip('data:image/png;base64,')
-
-#         value = value.strip()
-#         value = value.replace(' ', '')
-#         value = value.replace('\n', '')
-#         if len(value) % 4:
-#             value += '=' * (4 - len(value) % 4)
-#         value = binascii.a2b_base64(value)
-#         with open('image.jpg', 'wb') as image_file:
-#             image_file.write(value)
-        
-#         image_file.close()
-        
-#         message_bytes = image_data.encode('ascii')
-#         base64_bytes = base64.b64encode(message_bytes)
-        
-#         image = Image.frombytes('RGB',(640,400),decodestring(base64_bytes))
-#         image.save("foo.png")
-#         item = Product(name = name,price = price, digital = product_type, image = image_file)
-#         item.save();
-#         Product.objects.create(name = name,price = price, digital = product_type, image = image_file)
-
-#         products = Product.objects.all()
-#         context = {'products':products}
-#         return render(request,"admin/product_view.html", context)
-#     return render(request,"admin/add_product.html")
-
-
-
-# dicti = {"name":name,"category":category,"product_quantity":product_quantity,"attribute":attribute,"oldprice":oldprice,,"oldprice":oldprice}
-        # if Product.objects.filter(name=name).exists():
-        #     messages.error(request,'Product name exist')
-        #     return render(request,'addproduct.html',dicti)
-
-
-# @cache_control(no_cache=True, must_revalidate=True,no_store=True)
-#  def adminhome(request):
-#     if request.session.has_key('username'):
-#         username = request.session['username']
-#         return render(request, 'adminhome.html', {"username" : username})
-#     else:
-#         return render(request, 'adminlogin.html', {})
-
-
-# def delete(request,id):
-#     productitems = product.objects.get(id=id)
-#     productitems.delete()
-#     return redirect(adminproduct)
-
-
-# def update(request,id):
-#     productitems = product.objects.get(id=id)
-#     if request.method=='POST':
-#         first_name = request.POST['firstname']
-#         last_name = request.POST['lastname']
-#         email = request.POST['email']
-#         user.first_name=first_name
-#         user.last_name=last_name
-#         user.email=email
-#         user.save()
-#         return redirect(adminlog)
-#     else:
-#         return render(request,'update.html',{'user':user})
-
-
-
-# def adhome(request):
-#     productitems = Product.objects.all()
-#     return render(request, 'adhome.html', {'productitems' : productitems})
-
-
-# request.session.flush()

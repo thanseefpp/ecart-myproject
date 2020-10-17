@@ -54,19 +54,41 @@
 								</div>
 								<div class="caption" id="shipping-info">
 									<div class="form-group">
-										<input class="input" type="text" name="address" placeholder="Address" required>
+										<input class="input" id="add1" type="text" name="address" placeholder="Address" required>
 									</div>
 									<div class="form-group">
-										<input class="input" type="text" name="city" placeholder="City" required>
+										<input class="input" id="city" type="text" name="city" placeholder="City" required>
 									</div>
 									<div class="form-group">
-										<input class="input" type="text" name="state" placeholder="State" required>
+										<input class="input" id="stat" type="text" name="state" placeholder="State" required>
 									</div>
 									<div class="form-group">
-										<input class="input" type="text" name="zipcode" placeholder="ZIP Code" required>
+										<input class="input" id="zip" type="text" name="zipcode" placeholder="ZIP Code" required>
 									</div>
 								</div>
 							</div>
+
+							{% if user.is_authenticated %}
+							<div>
+								<div class="section-title">
+									<h3 class="title">Select address</h3>
+								</div>
+								{% for shi in shipping  %}
+									<div class="col-md-4">
+										<div class="card text-center card-product"
+											style="background-color:rgba(0, 0, 255, 0.1);; color: black;">
+											<div class="card-body" style="color: black;">
+												<h6 id="addd1" data-mo="{{shi.address}}" style="padding-top: 20px;">{{shi.address}}</h6>
+												<p id="addd2">{{shi.city}}</p>
+												<p id="addd3">{{shi.state}}</p>
+												<p id="addd4">{{shi.zipcode}}</p>
+												<input id="myCheck" name="{{shi.id}}" type="checkbox">
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+							{% endif %}
 							<hr>
 							<!-- /Shiping Details -->
 						</div>
@@ -196,7 +218,7 @@
 	<script type="text/javascript">
 		var shipping = '{{order.shipping}}'
 		var total = '{{order.get_cart_total}}'
-		var payment_cod = 'cod'
+		var payment_Cod = 'cod'
 		
 		if (user != 'AnonymousUser'){
 		 	document.getElementById('user-info').innerHTML = ''
@@ -219,9 +241,10 @@
 	    })
 		
 		document.getElementById('cod').addEventListener('click', 
-			function submitFormCod(payment_cod){
-				console.log('Payment button clicked')
-				payment_status = payment_cod
+			function submitFormCod(payment_Cod){
+				console.log('COD Button clicked')
+				console.log(payment_Cod)
+
 				var userFormData = {
 					'name':null,
 					'email':null,
@@ -233,7 +256,7 @@
 					'city':null,
 					'state':null,
 					'zipcode':null,
-					'payment_status':null,
+					'payment_Cod':null,
 				}
 
 				if (shipping != 'False'){
@@ -241,7 +264,7 @@
 					shippingInfo.city = form.city.value
 					shippingInfo.state = form.state.value
 					shippingInfo.zipcode = form.zipcode.value
-					shippingInfo.payment_status = payment_status
+					shippingInfo.payment_Cod = payment_Cod
 				}
 
 				if (user == 'AnonymousUser'){
@@ -252,7 +275,7 @@
 				console.log('Shipping Info:', shippingInfo)
 				console.log('User Info:', userFormData)
 
-				var url = "/process_order/"
+				var url = "/cod/"
 				fetch(url, {
 					method:'POST',
 					headers:{
@@ -333,94 +356,51 @@
 	    }
 	</script>
 
-	// <!-- <script>
-	// 	var shipping = '{{order.shipping}}'
-	// 	var total = '{{order.get_cart_total}}'
+<script>
+    $(document).ready(function () {
+        const a1 = document.querySelectorAll('#addd1')
+        var yyy = document.querySelectorAll("#myCheck")
+        // 
+        console.log(a1)
+        console.log(yyy);
+        yyy.forEach((dd) => {
+            const sss = dd.name
+            console.log(sss);
 
-		
-	// 	if (user != 'AnonymousUser'){
-	// 	 	document.getElementById('user-info').innerHTML = ''
-	// 	}
+            $(dd).change(function () {
+                if (dd.checked == true) {
+                    console.log("error")
+                    console.log(dd.name)
 
-	// 	if (shipping == 'False' && user != 'AnonymousUser'){
-	// 		//Hide entire form if user is logged in and shipping is false
-	// 		document.getElementById('form-wrapper').classList.add("hidden");
-	// 		//Show payment if logged in user wants to buy an item that does not require shipping
-	// 		document.getElementById('payment-info').classList.remove("hidden");
-	// 	}
+                    $.ajax({
+                        url: '/getshipping/',
+                        type: 'GET',
+                        data: {
+                            ship_id: dd.name
+                        },
+                        success: function (response) {
+                            console.log(response.count2.address)
+                            console.log(response.count2.city)
+                            console.log(response.count2.state)
+                            console.log(response.count2.zipcode)
 
-	// 	var form = document.getElementById('form')
-	// 	form.addEventListener('submit', function(e){
-	//     	e.preventDefault()
-	//     	console.log('Form Submitted...')
-	//     	document.getElementById('form-button').classList.add("hidden");
-	// 		document.getElementById('payment-info').classList.remove("hidden");
-	// 		// submitFormData()
-	//     })
-
-
-	// 	document.getElementById('cod').addEventListener('click', function(e){
-	//     	submitFormCod()
-	//     })
-
-	//     function submitFormCod(){
-	//     	console.log('Payment button clicked')
-	// 		console.log()
-
-	//     	var userFormData = {
-	// 			'name':null,
-	// 			'email':null,
-	// 			'total':total,
-	// 		}
-
-	// 		var shippingInfo = {
-	// 			'address':null,
-	// 			'city':null,
-	// 			'state':null,
-	// 			'zipcode':null,
-	// 			'payment_status':null,
-	// 		}
-
-	// 		if (shipping != 'False'){
-	//     		shippingInfo.address = form.address.value
-	// 	    	shippingInfo.city = form.city.value
-	// 	    	shippingInfo.state = form.state.value
-	// 			shippingInfo.zipcode = form.zipcode.value
-	//     	}
-
-	//     	if (user == 'AnonymousUser'){
-	//     		userFormData.name = form.name.value
-	//     		userFormData.email = form.email.value
-	//     	}
-
-	//     	console.log('Shipping Info:', shippingInfo)
-	//     	console.log('User Info:', userFormData)
-
-	//     	var url = "/cod/"
-	//     	fetch(url, {
-	//     		method:'POST',
-	//     		headers:{
-	//     			'Content-Type':'applicaiton/json',
-	//     			'X-CSRFToken':csrftoken,
-	//     		}, 
-	//     		body:JSON.stringify({'form':userFormData, 'shipping':shippingInfo}),
-	    		
-	//     	})
-	//     	.then((response) => response.json())
-	//     	.then((data) => {
-	// 			console.log('Success:', data);
-	// 			alert('Order Placed');  
-
-	// 			cart = {}
-	// 			document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
-
-	// 			window.location.href = "{% url 'ordersview' %}"
-				
-
-	// 			})
-	//     }
-	// </script> -->
-
+                            $("#add1").val(response.count2.address)
+                            $("#city").val(response.count2.city)
+                            $("#stat").val(response.count2.state)
+                            $("#zip").val(response.count2.zipcode)
+                        }
+                    });
+                } else {
+                    $("#add1").val("")
+                    $("#city").val("")
+                    $("#stat").val("")
+                    $("#zip").val("")
+                }
+            })
+            // console.log(yyy)
+        })
+    })
+</script>
 
 {% endblock %}
 
