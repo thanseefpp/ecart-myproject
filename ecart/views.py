@@ -253,10 +253,11 @@ def track(request,id):
         data = cartData(request)
         cartItems = data['cartItems']
         customer = request.user.customer
+
         orders = Order.objects.get(id=id)
         print(orders.order_status)
-
-        return render(request,'track.html',{'orders':orders})
+        context = {'orders':orders,'cartItems':cartItems}
+        return render(request,'track.html',context)
     else:
         return render(request,'index.html')
     
@@ -353,7 +354,7 @@ def cod(request):
                 city=data['shipping']['city'],
                 state=data['shipping']['state'],
                 zipcode=data['shipping']['zipcode'],
-                payment_Cod=data['shipping']['payment_Cod'],
+                payment_cod=data['shipping']['payment_cod'],
             )        
     else:
         customer,order=guestUser(request,data)
@@ -552,10 +553,10 @@ def adminds(request):
         payment = []
         paypal = ShippingAddress.objects.filter(payment_status='paypal')
         razor = ShippingAddress.objects.filter(payment_status='razorpay')
-        cod = ShippingAddress.objects.filter(payment_Cod='cod')
+        cashondelivery = ShippingAddress.objects.filter(payment_cod='cash')
         pay = paypal.count()
         raz = razor.count()
-        cnt = cod.count()
+        cnt = cashondelivery.count()
         print('paypal:',pay,'RaZ:',raz,'cod:',cnt)
         payment.append(raz)
         payment.append(pay)
@@ -581,34 +582,19 @@ def orders(request):
         return render(request,'adminlogin.html')
 
 
-def approve(request):
-    if request.session.has_key('password'):
-        id = request.POST.get('order_id')
-        category = request.POST.get('order_status')
-        print(id)
+def update_order(request):
+    id = request.POST.get('order_id')
+    status = request.POST.get('order_status')
+    print(id)
+    print('status:',status)
 
-        order=Order.objects.get(id=id)
-        print(order)
-        order.order_status = category
-        order.save();
-        return redirect('orders')
+    order = Order.objects.get(id = id)
+    print('orderid:',order)
+    order.order_status = status
+    print('orderstatus:',order.order_status)
+    order.save();
+    return redirect('orders')
 
-
-# def update_order(request):
-#     id = request.POST.get('order_id')
-#     status = request.POST.get('order_status')
-#     print(id)
-
-#     order = Order.objects.get(id=id)
-#     order.order_status = status
-#     order.save();
-
-#     category=request.POST['category']
-#     order=Order.objects.get(id=id)
-#     order.order_status = category
-#     order.save();
-        
-#     return redirect('orders_view')
 
 def adorderitem(request):
     if request.session.has_key('password'):
@@ -643,15 +629,19 @@ def customer(request):
 
     return render(request,'customer.html', {'value':values})
 
-
 def customerdel(request,id):
     customer=Customer.objects.get(id=id)
     customer.delete()
     return redirect('customer')
 
+def userdel(request,id):
+    user=User.objects.get(id=id)
+    user.delete()
+    return redirect('user')
+
 
 def user(request):
-    user = User.objects.all()
+    user = User.objects.filter(is_superuser=False)
     context= {'user':user}
     return render(request,'user.html',context)
 

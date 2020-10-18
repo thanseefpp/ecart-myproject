@@ -28,18 +28,11 @@ urlpatterns = [
     path('user/',views.user,name='user'),
     path('ordersview/',views.ordersview,name='ordersview'),
     path('adorderitem/',views.adorderitem,name='adorderitem'),
-    path('approve/',views.approve,name='approve'),
+    path('update_order/',views.update_order,name='update_order'),
+    path('userdel/<int:id>/',views.userdel,name='userdel'),
     path('customerdel/<int:id>/',views.customerdel,name='customerdel'),
     path('cod/',views.cod,name='cod'),
     path('getshipping/',views.Getshipping.as_view()),
     path('track/<int:id>/',views.track,name='track'),
 
 ]
-
-
-
-# path('adhome',views.adhome,name = 'adhome'),
-# path('adminproduct',views.adminproduct,name='adminproduct'),
-# path('adminproduct',views.adminproduct,name = 'adminproduct'),
-# 
-# path('adminhome',views.adminhome,name='adminhome'),

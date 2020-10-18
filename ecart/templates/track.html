@@ -20,14 +20,14 @@
                         <div class="md-step-bar-right"></div>
                     </div>
                     <div class="md-step">
-                        <div class="md-step-circle"><span>3</span></div>
-                        <div class="md-step-title">Complete</div>
+                        <div class="md-step-circle"><span>4</span></div>
+                        <div class="md-step-title">Out for delivery</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
                     </div>
                     <div class="md-step">
-                        <div class="md-step-circle"><span>4</span></div>
-                        <div class="md-step-title">Out for delivery</div>
+                        <div class="md-step-circle"><span>3</span></div>
+                        <div class="md-step-title">Complete</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
                     </div>
@@ -45,14 +45,40 @@
                         <div class="md-step-bar-right"></div>
                     </div>
                     <div class="md-step">
+                        <div class="md-step-circle"><span>4</span></div>
+                        <div class="md-step-title">Out for delivery</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step">
                         <div class="md-step-circle"><span>3</span></div>
                         <div class="md-step-title">Complete</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
                     </div>
-                    <div class="md-step">
+                
+                {% elif orders.order_status == 'Out for delivery' %}
+                    <div class="md-step active done">
+                        <div class="md-step-circle"><span>1</span></div>
+                        <div class="md-step-title">Pending</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step active done">
+                        <div class="md-step-circle"><span>2</span></div>
+                        <div class="md-step-title">Shipped</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step active">
                         <div class="md-step-circle"><span>4</span></div>
                         <div class="md-step-title">Out for delivery</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+                    <div class="md-step">
+                        <div class="md-step-circle"><span>3</span></div>
+                        <div class="md-step-title">Complete</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
                     </div>
@@ -69,40 +95,15 @@
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
                     </div>
-                    <div class="md-step active">
-                        <div class="md-step-circle"><span>3</span></div>
-                        <div class="md-step-title">Complete</div>
-                        <div class="md-step-bar-left"></div>
-                        <div class="md-step-bar-right"></div>
-                    </div>
-                    <div class="md-step">
+                    <div class="md-step active done">
                         <div class="md-step-circle"><span>4</span></div>
                         <div class="md-step-title">Out for delivery</div>
-                        <div class="md-step-bar-left"></div>
-                        <div class="md-step-bar-right"></div>
-                    </div>
-                {% elif orders.order_status == 'Out for delivery' %}
-                    <div class="md-step active done">
-                        <div class="md-step-circle"><span>1</span></div>
-                        <div class="md-step-title">Pending</div>
-                        <div class="md-step-bar-left"></div>
-                        <div class="md-step-bar-right"></div>
-                    </div>
-                    <div class="md-step active done">
-                        <div class="md-step-circle"><span>2</span></div>
-                        <div class="md-step-title">Shipped</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
                     </div>
                     <div class="md-step active done">
                         <div class="md-step-circle"><span>3</span></div>
                         <div class="md-step-title">Complete</div>
-                        <div class="md-step-bar-left"></div>
-                        <div class="md-step-bar-right"></div>
-                    </div>
-                    <div class="md-step active">
-                        <div class="md-step-circle"><span>4</span></div>
-                        <div class="md-step-title">Out for delivery</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
                     </div>

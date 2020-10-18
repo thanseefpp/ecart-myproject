@@ -94,7 +94,7 @@
                     <th scope="col" class="sort" data-sort="status">Email</th>
                     <th scope="col">Phone Number</th>
                     <th scope="col" class="sort" data-sort="completion">Join Date</th>
-                    <th scope="col" class="text-right" style="padding-right: 53px;">Last Login</th>
+                    <th scope="col" class="text-right" style="padding-right: 53px;">Action</th>
                   </tr>
                 </thead>
                 <tbody class="list">
@@ -108,7 +108,11 @@
                         {{user.date_joined}}
                     </td>
                     <td>
-                        {{user.last_login}}
+                      <form action="{% url 'userdel' user.id %}" method="POST" onsubmit="window.mytest()">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-info btn-md">Delete</button>
+                        <!-- <input class="dropdown-item" type="submit" value="Delete Product" class="btn btn-info btn-md"> -->
+                      </form>
                     </td>
                   </tr>
                   {% endfor %}
@@ -121,6 +125,9 @@
     </div>
   </div>
   <script>
+    window.mytest = function() {var isValid = confirm('Are you sure do you want to delete the user?');
+    if (!isValid) {event.preventDefault(); alert("Not deleted!");}}
+
     function myFunction() {
     // Declare variables
     var input, filter, table, tr, td, i, txtValue;

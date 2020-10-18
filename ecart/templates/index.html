@@ -52,7 +52,7 @@
 				
 											</div>
 											<div class="add-to-cart">
-												<button data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<button onclick="window.pop()" data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
 										<!-- /product -->
@@ -79,7 +79,7 @@
 				
 											</div>
 											<div class="add-to-cart">
-												<button data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<button onclick="window.pop()" data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
 										<!-- /product -->
@@ -106,7 +106,7 @@
 				
 											</div>
 											<div class="add-to-cart">
-												<button data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<button onclick="window.pop()" data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
 										<!-- /product -->
@@ -133,7 +133,7 @@
 				
 											</div>
 											<div class="add-to-cart">
-												<button data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<button onclick="window.pop()" data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
 										<!-- /product -->
@@ -250,7 +250,7 @@
 				
 											</div>
 											<div class="add-to-cart">
-												<button data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<button onclick="window.pop()" data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
 										<!-- /product -->
@@ -277,7 +277,7 @@
 				
 											</div>
 											<div class="add-to-cart">
-												<button data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<button onclick="window.pop()" data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
 										<!-- /product -->
@@ -304,7 +304,7 @@
 				
 											</div>
 											<div class="add-to-cart">
-												<button data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<button onclick="window.pop()" data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
 										<!-- /product -->
@@ -331,7 +331,7 @@
 				
 											</div>
 											<div class="add-to-cart">
-												<button data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
+												<button onclick="window.pop()" data-product="{{lap.id}}" data-action="add" class="add-to-cart-btn update-cart"><i class="fa fa-shopping-cart"></i> add to cart</button>
 											</div>
 										</div>
 										<!-- /product -->
@@ -467,5 +467,20 @@
 		</div>
 		<!-- /NEWSLETTER -->
 
+<script>
+window.pop=function(){
+tempAlert("item added to cart",1000);
+function tempAlert(msg,duration)
+{
+ var el = document.createElement("div");
+ el.setAttribute("style","position:fixed;top:5%;left:88%;background-color:#D10024e6;width:12%;height:5%;text-align:center;color:white;padding-top:3px;" );
+ el.innerHTML = msg;
+ setTimeout(function(){
+  el.parentNode.removeChild(el);
+ },duration);
+ document.body.appendChild(el);
+}
+}
+</script>
 
 {% endblock %}

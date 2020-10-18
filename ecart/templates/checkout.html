@@ -218,7 +218,7 @@
 	<script type="text/javascript">
 		var shipping = '{{order.shipping}}'
 		var total = '{{order.get_cart_total}}'
-		var payment_Cod = 'cod'
+
 		
 		if (user != 'AnonymousUser'){
 		 	document.getElementById('user-info').innerHTML = ''
@@ -241,9 +241,8 @@
 	    })
 		
 		document.getElementById('cod').addEventListener('click', 
-			function submitFormCod(payment_Cod){
+			function submitFormCod(){
 				console.log('COD Button clicked')
-				console.log(payment_Cod)
 
 				var userFormData = {
 					'name':null,
@@ -256,7 +255,7 @@
 					'city':null,
 					'state':null,
 					'zipcode':null,
-					'payment_Cod':null,
+					'payment_cod':null,
 				}
 
 				if (shipping != 'False'){
@@ -264,7 +263,7 @@
 					shippingInfo.city = form.city.value
 					shippingInfo.state = form.state.value
 					shippingInfo.zipcode = form.zipcode.value
-					shippingInfo.payment_Cod = payment_Cod
+					shippingInfo.payment_cod = payment_cod = 'cash'
 				}
 
 				if (user == 'AnonymousUser'){
