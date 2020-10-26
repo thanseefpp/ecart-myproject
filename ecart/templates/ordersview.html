@@ -8,7 +8,7 @@
     <div class="container">
         <div class="breadcrumbs">
             <ol class="breadcrumb">
-              <li><a href="#">Home</a></li>
+              <li><a href="{% url 'index' %}">Home</a></li>
               <li class="active">Purchased products</li>
             </ol>
         </div>
@@ -46,10 +46,10 @@
                             <p class="cart_total_price">{{item.order.date_orderd.date}}</p>
                         </td>
                         <td class="cart_total">
-                          <p class="cart_total_price">{{item.order.order_status}}</p>
+                          <p class="cart_total_price">{{item.orderitem_status}}</p>
                       </td>
                       <td>
-                        <a href="{% url 'track' item.order_id %}" ><button class="primary-btn order-submit">Track</button></a>
+                        <a href="{% url 'track' item.id %}" ><button class="primary-btn order-submit">Track</button></a>
                       </td>
                     </tr>
                     {% endfor %}

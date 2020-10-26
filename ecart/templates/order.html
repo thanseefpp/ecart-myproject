@@ -71,9 +71,6 @@
                 </ol>
               </nav>
             </div>
-            <div class="col-lg-6 col-5 text-right">
-              <a href="{% url 'adorderitem' %}" class="btn btn-sm btn-neutral">OrderItems</a>
-            </div>
           </div>
         </div>
       </div>
@@ -93,8 +90,8 @@
                 <thead class="thead-light">
                   <tr>
                     <th scope="col" class="sort" data-sort="name">Order_ID</th>
-                    <th scope="col" class="sort" data-sort="budget">Customer Name</th>
-                    <th scope="col" class="sort" data-sort="status">Order_Date</th>
+                    <th scope="col" class="sort" data-sort="budget">Order_item </th>
+                    <th scope="col" class="sort" data-sort="status">Quantity</th>
                     <th scope="col">Total</th>
                     <th scope="col" class="sort" data-sort="completion">Status</th>
                   </tr>
@@ -102,40 +99,37 @@
                 <tbody class="list">
                   {% for order in orders %}
                   {% if order.complete == True %}
+                  {% for item in order.orderitem_set.all %}
                   <tr>
-                    <th scope="row">{{order.id}}</th>
-                    <td>{{order.customer}}</td>
-                    <td>{{order.date_orderd}}</td>
-                    <td>{{order.get_cart_total}}</td>
+                    <th scope="row">{{item.id}}</th>
+                    <td><img src="/image/{{ item.product.image_url }}" alt="" style="width: 6rem; height: 4rem;">{{item.product}}</td>
+                    <td>{{item.quantity}}</td>
+                    <td>{{item.get_total}}</td>
                     <td>
+                      {% if item.orderitem_status == 'Complete' %}
                       <div class="btn-group">
-                        <button type="button" class="actual_status btn btn-info btn-md">{{order.order_status}}</button>
+                        <button type="button" class="actual_status btn btn-info btn-md">Completed</button>
+                      </div>
+                      {% else %}
+                      <div class="btn-group">
+                        <button type="button" class="actual_status btn btn-info btn-md">{{item.orderitem_status}}</button>
                         <button type="button" class="btn btn-info btn-md dropdown-toggle px-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    
                         <span class="sr-only">Toggle Dropdown</span>
                         </button>
                             <div class="dropdown-menu">
-                                {% if order.order_status == 'Pending' %}
-                                  <button  data-id="{{order.id}}"  data-status="Shipped" class="change_status dropdown-item" >Shipped</button>
-                                  <button  data-id="{{order.id}}"  data-status="Complete" class="change_status dropdown-item" >Complete</button>    
-                                  <button data-id="{{order.id}}"  data-status="Out for delivery" class="change_status dropdown-item" >Out for delivery</button>
-                                {% elif order.order_status == 'Shipped' %}
-                                  <button  data-id="{{order.id}}"  data-status="Pending" class="change_status dropdown-item" >Pending</button>
-                                  <button  data-id="{{order.id}}"  data-status="Complete" class="change_status dropdown-item" >Complete</button>    
-                                  <button data-id="{{order.id}}"  data-status="Out for delivery" class="change_status dropdown-item" >Out for delivery</button>
-                                {% elif order.order_status == 'Complete' %}
-                                  <button  data-id="{{order.id}}"  data-status="Shipped" class="change_status dropdown-item" >Shipped</button>
-                                  <button  data-id="{{order.id}}"  data-status="Pending" class="change_status dropdown-item" >Pending</button>    
-                                  <button data-id="{{order.id}}"  data-status="Out for delivery" class="change_status dropdown-item" >Out for delivery</button>
-                                {% elif order.order_status == 'Out for delivery' %}
-                                  <button  data-id="{{order.id}}"  data-status="Shipped" class="change_status dropdown-item" >Shipped</button>
-                                  <button  data-id="{{order.id}}"  data-status="Complete" class="change_status dropdown-item" >Complete</button>    
-                                  <button data-id="{{order.id}}"  data-status="Pending" class="change_status dropdown-item" >Pending</button>
+                                {% if item.orderitem_status == 'Pending' %}
+                                  <button  data-id="{{item.id}}"  data-status="Shipped" class="change_status dropdown-item" >Shipped</button>
+                                {% elif item.orderitem_status == 'Shipped' %}
+                                <button data-id="{{item.id}}"  data-status="Out for delivery" class="change_status dropdown-item" >Out for delivery</button>
+                                {% elif item.orderitem_status == 'Out for delivery' %}
+                                <button  data-id="{{item.id}}"  data-status="Complete" class="change_status dropdown-item" >Complete</button>
                                 {%endif%}
                             </div>
-                    </div>  
+                      </div>
+                      {% endif %}
                     </td>
                   </tr>
+                  {% endfor %}
                   {% endif %}
                   {% endfor %}
                 </tbody>

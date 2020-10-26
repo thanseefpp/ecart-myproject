@@ -89,9 +89,10 @@
 
 <body>
 	<!-- HEADER -->
+	<div style="position: fixed;width: 100%;z-index: 1500; top: 0;">
 	<header>
 		<!-- MAIN HEADER -->
-		<div id="header">
+		<div id="header" >
 			<!-- container -->
 			<div class="container">
 				<!-- row -->
@@ -99,7 +100,7 @@
 					<!-- LOGO -->
 					<div class="col-md-3">
 						<div class="header-logo">
-							<a href="#" class="logo">
+							<a href="{% url 'index' %}" class="logo">
 								<!-- <img src="{% static 'img/logo.png' %}" alt=""> -->
 								<h1 style="color: aliceblue;padding-top: 0.5cm;">Azure Store</h1>
 							</a>
@@ -169,26 +170,12 @@
 		</div>
 		<!-- /MAIN HEADER -->
 	</header>
+</div>
+
+	<div style="padding-top: 102px;">
+	</div>
 	<!-- /HEADER -->
-	<!-- NAVIGATION -->
-	<nav id="navigation">
-		<!-- container -->
-		<div class="container">
-			<!-- responsive-nav -->
-			<div id="responsive-nav">
-				<!-- NAV -->
-				<ul class="main-nav nav navbar-nav">
-					<li class="active"><a href="{% url 'index' %}">Home</a></li>
-					<li><a href="{% url 'laptop' %}">Laptops</a></li>
-					<li><a href="{% url 'smartphone' %}">Smartphones</a></li>
-					<li><a href="{% url 'accessories' %}">Accessories</a></li>
-				</ul>
-				<!-- /NAV -->
-			</div>
-			<!-- /responsive-nav -->
-		</div>
-		<!-- /container -->
-	</nav>
+
 	<!-- /NAVIGATION -->
 	{% block content %}
 	{% endblock %}

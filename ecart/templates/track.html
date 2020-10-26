@@ -6,7 +6,7 @@
 
         <div style="width: 200px;height: 200px;padding-left: 213px;padding-top: 40px;">
             <div class="md-stepper-horizontal blue">
-                {% if orders.order_status == 'Pending' %}
+                {% if orders.orderitem_status == 'Pending' %}
                     <div class="md-step active">
                         <div class="md-step-circle"><span>1</span></div>
                         <div class="md-step-title">Pending</div>
@@ -31,7 +31,7 @@
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
                     </div>
-                {% elif orders.order_status == 'Shipped' %}
+                {% elif orders.orderitem_status == 'Shipped' %}
                     <div class="md-step active done">
                         <div class="md-step-circle"><span>1</span></div>
                         <div class="md-step-title">Pending</div>
@@ -57,7 +57,7 @@
                         <div class="md-step-bar-right"></div>
                     </div>
                 
-                {% elif orders.order_status == 'Out for delivery' %}
+                {% elif orders.orderitem_status == 'Out for delivery' %}
                     <div class="md-step active done">
                         <div class="md-step-circle"><span>1</span></div>
                         <div class="md-step-title">Pending</div>
@@ -82,7 +82,7 @@
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
                     </div>
-                {% elif orders.order_status == 'Complete' %}
+                {% elif orders.orderitem_status == 'Complete' %}
                     <div class="md-step active done">
                         <div class="md-step-circle"><span>1</span></div>
                         <div class="md-step-title">Pending</div>

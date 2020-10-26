@@ -8,9 +8,14 @@
     <div class="container">
         <div class="breadcrumbs">
             <ol class="breadcrumb">
-              <li><a>Home</a></li>
+              <li><a href="{% url 'index' %}">Home</a></li>
               <li class="active">Shopping Cart</li>
             </ol>
+        </div>
+        <div>
+          <label>Total Items : <strong id="total-items">{{order.get_cart_items}}</strong></label>
+          <label style="padding-left: 860px;"><strong id="total-price">{{order.get_cart_total}} </strong></label>
+          <label>: Total price</label>
         </div>
         <div class="table-responsive cart_info">
             <table class="table table-condensed">
@@ -58,14 +63,14 @@
                             <td class="cart_quantity">
                                 <div class="cart_quantity_button">
                                     {% if user.is_authenticated %}
-                                    <button id="up" data-product={{item.product.id}}  data-action="add" onclick="window.myup('{{item}}')"  class="cart_quantity_up update-cart"  ><i class="fa fa-sort-asc"></i></button>
+                                      <button id="up" data-product={{item.product.id}}  data-action="add" onclick="window.myup('{{item}}')"  class="cart_quantity_up update-cart">+</button>
                                       <input style="text-align:center;"  id="qu{{item}}" class="test" value="{{item.quantity}}" >
-                                      <button data-product={{item.product.id}} data-action="remove"  onclick="window.mydown('{{item}}')" class="cart_quantity_down update-cart" > <i class="fa fa-sort-desc"></i></button>
+                                      <button data-product={{item.product.id}} data-action="remove"  onclick="window.mydown('{{item}}')" class="cart_quantity_down update-cart">-</button>
                                     
                                       {% else %}
-                                      <a data-product={{item.product.id}} data-action="add" class=" cart_quantity_up update-cart" href=""> + </a>
-                                          <input style="text-align:center;"  id="qu{{item}}" class="test" value="{{item.quantity}}" >
-                                      <a data-product={{item.product.id}} data-action="remove" class="cart_quantity_down update-cart" href=""> - </a>
+                                      <button data-product={{item.product.id}} data-action="add" class="cart_quantity_up update-cart"> + </button>
+                                      <input style="text-align:center;"  id="qu{{item}}" class="test" value="{{item.quantity}}" >
+                                      <button data-product={{item.product.id}} data-action="remove" class="cart_quantity_down update-cart" >-</button>
                                     {%endif%}
                                                                         
                                 </div>
@@ -88,13 +93,9 @@
                 </tbody>
             </table>
         </div>
-        <div style="padding-left: 1000px;">
-            <h5 style="padding-left: 35px;"><strong id="total-items">{{order.get_cart_items}} </strong>: Items</h5>
-            <h5 style="padding-left: 0px;"><strong id="total-price">{{order.get_cart_total}} </strong>: Total Price</h5>
-        </div>
-        <div style="padding-left: 856px;padding-top: 25px;">
-            <a href="{% url 'index' %}" class="primary-btn order-submit">Continue Shope</a>
-            <a href="{% url 'checkout' %}" class="primary-btn order-submit">Checkout</a>
+        <div style="padding-top: 8px;">
+            <a href="{% url 'index' %}" class="primary-btn order-submit" style="margin-right: 23px;">Continue Shope</a>
+            <a href="{% url 'checkout' %}" class="primary-btn order-submit" style="margin-left: 857px;">Checkout</a>
         </div>
     </div>
 </section> <!--/#cart_items-->

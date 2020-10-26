@@ -254,8 +254,8 @@ def track(request,id):
         cartItems = data['cartItems']
         customer = request.user.customer
 
-        orders = Order.objects.get(id=id)
-        print(orders.order_status)
+        orders = OrderItem.objects.get(id=id)
+        print(orders.orderitem_status)
         context = {'orders':orders,'cartItems':cartItems}
         return render(request,'track.html',context)
     else:
@@ -375,13 +375,17 @@ def login(request):
         username = request.POST['username']
         password = request.POST['password']
         user = auth.authenticate(username=username, password=password)
-
-        if user is not None:
-            auth.login(request,user)
-            return redirect(index)
-        else:
-            messages.error(request, '😢 Wrong username/password!')
+        print('user:',user)
+        if user == None:
+            messages.error(request, '😢 Your account has been Blocked!')
             return redirect('login')
+        else:
+            if user is not None:
+                auth.login(request,user)
+                return redirect(index)
+            else:
+                messages.error(request, '😢 Wrong username/password!')
+                return redirect('login')
     else:
         return render(request,'login.html')
 
@@ -461,7 +465,7 @@ def register(request):
                 'expiry': '900'}
                 files = []
                 headers = {
-                'Authorization': 'Token 0d21f1e3cb977b24ebd925ec71d3fec0cb0a41f3'
+                'Authorization': 'Token '
                 }
                 response = requests.request("POST", url, headers=headers, data = payload, files = files)
                 print(response.text.encode('utf8'))
@@ -523,7 +527,6 @@ def adminds(request):
         print('hi',today_order)
 
         chart_order = Order.objects.filter(date_orderd__year = year,date_orderd__month = month)
-        print(chart_order[0].get_cart_total)
 
         chart_values = []
         
@@ -577,7 +580,8 @@ def adminds(request):
 def orders(request):
     if request.session.has_key('password'):
         order = Order.objects.all()
-        return render(request,'order.html', {'orders':order})
+        orderitem = OrderItem.objects.all()
+        return render(request,'order.html', {'orders':order,'orderitem':orderitem})
     else:
         return render(request,'adminlogin.html')
 
@@ -588,21 +592,13 @@ def update_order(request):
     print(id)
     print('status:',status)
 
-    order = Order.objects.get(id = id)
+    order = OrderItem.objects.get(id = id)
     print('orderid:',order)
-    order.order_status = status
-    print('orderstatus:',order.order_status)
+    order.orderitem_status = status
+    print('orderstatus:',order.orderitem_status)
     order.save();
     return redirect('orders')
 
-
-def adorderitem(request):
-    if request.session.has_key('password'):
-        password = request.session['password']
-        orderitem = OrderItem.objects.all()
-        return render(request,'adorderitem.html', {'orderitem':orderitem})
-    else:
-        return render(request,'adorderitem.html')
 
 
 #admin 
@@ -613,26 +609,9 @@ def adminpd(request):
         productitems = Product.objects.all()
         return render(request,'products.html', {'productitems' : productitems})
     else:
-        return render(request,'products.html')
+        return render(request,'admin.html')
 
 
-def customer(request):
-    customer = Customer.objects.all()
-    item=[]
-    for cust in customer:
-        order=Order.objects.filter(customer=cust,complete=True)
-        value=order.count()
-        item.append(value)
-
-    print('item:',item)
-    values=zip(customer,item)
-
-    return render(request,'customer.html', {'value':values})
-
-def customerdel(request,id):
-    customer=Customer.objects.get(id=id)
-    customer.delete()
-    return redirect('customer')
 
 def userdel(request,id):
     user=User.objects.get(id=id)
@@ -641,10 +620,24 @@ def userdel(request,id):
 
 
 def user(request):
-    user = User.objects.filter(is_superuser=False)
-    context= {'user':user}
-    return render(request,'user.html',context)
+    if request.session.has_key('password'):
+        user = User.objects.filter(is_superuser=False)
+        context= {'user':user}
+        return render(request,'user.html',context)
+    else:
+        return render(request,'admin.html')
 
+def userBlock(request,id):
+  user=User.objects.get(id=id)
+  if user.is_active == False:
+
+    user.is_active = True
+  else:
+    
+    user.is_active = False
+   
+  user.save()
+  return redirect('user')
 
 #admin 
 def delete(request,id):

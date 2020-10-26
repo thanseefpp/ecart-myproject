@@ -94,7 +94,8 @@
                     <th scope="col" class="sort" data-sort="status">Email</th>
                     <th scope="col">Phone Number</th>
                     <th scope="col" class="sort" data-sort="completion">Join Date</th>
-                    <th scope="col" class="text-right" style="padding-right: 53px;">Action</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody class="list">
@@ -107,11 +108,20 @@
                     <td>
                         {{user.date_joined}}
                     </td>
+                    {% if user.is_active == True %}
+                    <td>Active</td>	
+                    {%else%}
+                    <td>Blocked</td>
+                    {%endif%}	
+                      
                     <td>
-                      <form action="{% url 'userdel' user.id %}" method="POST" onsubmit="window.mytest()">
+                      <form class="form-inline" method="POST">
                         {% csrf_token %}
+                        <a href="{%url 'userblock' user.id%}"  onclick="window.mytest('{{user}}')" data-id="{{user.username}}"  id="blockcheck{{user}}" data-id="" class="delete"><i class="fa fa-ban" aria-hidden="true" style="margin-right: 19px;"></i></a>
+                        <a href="{% url 'userdel' user.id %}" onclick="window.mydelete('{{user}}')" data-id="{{user.username}}"  id="delcheck{{user}}" data-id="" class="delete"><i class="fa fa-trash" data-toggle="tooltip" title="Delete"></i></a>
+<!-- 							
                         <button type="submit" class="btn btn-info btn-md">Delete</button>
-                        <!-- <input class="dropdown-item" type="submit" value="Delete Product" class="btn btn-info btn-md"> -->
+                        <input class="dropdown-item" type="submit" value="Delete Product" class="btn btn-info btn-md"> -->
                       </form>
                     </td>
                   </tr>
@@ -125,9 +135,24 @@
     </div>
   </div>
   <script>
-    window.mytest = function() {var isValid = confirm('Are you sure do you want to delete the user?');
-    if (!isValid) {event.preventDefault(); alert("Not deleted!");}}
-
+    window.mytest=function(user){
+		var v= document.getElementById("blockcheck"+user)
+		var productid = v.dataset.id
+		var isValid =confirm("are you sure do you want block user  "+productid+ " ?");
+		if(!isValid){
+			event.preventDefault();
+			alert("it wont be block");
+		}
+	}
+	  window.mydelete=function(user){
+		var v= document.getElementById("delcheck"+user)
+		var productid = v.dataset.id
+		var isValid =confirm("are you sure do you want delete user "+productid+" ?");
+		if(!isValid){
+			event.preventDefault();
+			alert("it wont be delete");
+		}
+	}
     function myFunction() {
     // Declare variables
     var input, filter, table, tr, td, i, txtValue;
