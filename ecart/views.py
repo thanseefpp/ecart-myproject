@@ -48,7 +48,7 @@ def mobile(request):
 
             ]
             headers = {
-            'Authorization': 'Token 0d21f1e3cb977b24ebd925ec71d3fec0cb0a41f3'
+            'Authorization': 'Token 5ac8bdde04137193c3bf119679b002a3c2f3fef9'
             }
 
             response = requests.request("POST", url, headers=headers, data = payload, files = files)
@@ -84,7 +84,7 @@ def otp(request):
 
         ]
         headers = {
-        'Authorization': 'Token 0d21f1e3cb977b24ebd925ec71d3fec0cb0a41f3'
+        'Authorization': 'Token 5ac8bdde04137193c3bf119679b002a3c2f3fef9'
         }
 
         response = requests.request("POST", url, headers=headers, data = payload, files = files)
@@ -118,16 +118,11 @@ def otp(request):
 
 
 def index(request):
-    if request.user.is_authenticated:
-        user=request.user
-        name=request.user.email
-        customer,created = Customer.objects.get_or_create(user=user,name=name)
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
-    else:
-        cookieData = cookieCart(request)
-        cartItems = cookieData['cartItems']
+    data = cartData(request)
+    cartItems = data['cartItems']
+    print('cartItems',cartItems)
+    order = data['order']
+    items = data['items']
 
     productitems = Product.objects.all()
     Laptop = Product.objects.filter(category='Laptop')
@@ -138,16 +133,10 @@ def index(request):
 
 
 def smartphone(request):
-    if request.user.is_authenticated:
-        user=request.user
-        name=request.user.email
-        customer,created = Customer.objects.get_or_create(user=user,name=name)
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
-    else:
-        cookieData = cookieCart(request)
-        cartItems = cookieData['cartItems']
+    data = cartData(request)
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
 
     Laptop = Product.objects.filter(category='Laptop')
     Smartphone = Product.objects.filter(category='Smartphone')
@@ -157,16 +146,10 @@ def smartphone(request):
 
 
 def accessories(request):
-    if request.user.is_authenticated:
-        user=request.user
-        name=request.user.email
-        customer,created = Customer.objects.get_or_create(user=user,name=name)
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
-    else:
-        cookieData = cookieCart(request)
-        cartItems = cookieData['cartItems']
+    data = cartData(request)
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
 
     Laptop = Product.objects.filter(category='Laptop')
     Smartphone = Product.objects.filter(category='Smartphone')
@@ -176,16 +159,10 @@ def accessories(request):
 
 
 def laptop(request):
-    if request.user.is_authenticated:
-        user=request.user
-        name=request.user.email
-        customer,created = Customer.objects.get_or_create(user=user,name=name)
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        items = order.orderitem_set.all()
-        cartItems = order.get_cart_items
-    else:
-        cookieData = cookieCart(request)
-        cartItems = cookieData['cartItems']
+    data = cartData(request)
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
 
     Laptop = Product.objects.filter(category='Laptop')
     Smartphone = Product.objects.filter(category='Smartphone')
@@ -195,37 +172,33 @@ def laptop(request):
 
 
 def checkout(request):
-    try:
-        client = razorpay.Client(auth=("rzp_test_eMnSXZs7JW5fj7", "v12bdGlbSimIYQOff93S9ziv"))
-        data = cartData(request)
-        cartItems = data['cartItems']
-        order = data['order']
-        items = data['items']
+    client = razorpay.Client(auth=("rzp_test_eMnSXZs7JW5fj7", "v12bdGlbSimIYQOff93S9ziv"))
 
-        order_currency='USD'
-        order_receipt = 'order-rctid-11' 
-    
-        if request.user.is_authenticated:
-            order_amount=order.get_cart_total
-            order_amount *= 100
-            user = User.objects.get(username=request.user)
-            print('User:',user)
-            customer= Customer.objects.get(user=user)
-            print("customer:",customer)
-            ship = ShippingAddress.objects.filter(customer=customer).distinct('address')
-        else:
-            order_amount=order['get_cart_total']
-            order_amount *= 100
-            
-        response = client.order.create(dict(amount=order_amount,currency=order_currency,receipt=order_receipt,payment_capture='0'))
-        order_id = response['id']
-        order_status = response['status']
+    data = cartData(request)
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
 
-        context = {'shipping':ship,'items':items,'order':order,'cartItems':cartItems,'order_id':order_id}
-        return render(request, 'checkout.html', context)
-    except:
-        pass
-    return render(request,'checkout.html')
+    order_currency='USD'
+    order_receipt = 'order-rctid-11' 
+
+    if request.user.is_authenticated:
+        order_amount=order.get_cart_total
+        order_amount *= 100
+        user = User.objects.get(username=request.user)
+        customer= Customer.objects.get(user=user)
+        ship = ShippingAddress.objects.filter(customer=customer).distinct('address')
+    else:
+        order_amount=order['get_cart_total']
+        order_amount *= 100
+        ship = 'Null'
+        
+    response = client.order.create(dict(amount=order_amount,currency=order_currency,receipt=order_receipt,payment_capture='0'))
+    order_id = response['id']
+    order_status = response['status']
+
+    context = {'shipping':ship,'items':items,'order':order,'cartItems':cartItems,'order_id':order_id}
+    return render(request, 'checkout.html', context)
 
 
 class Getshipping(View):
@@ -305,29 +278,30 @@ def updateItem(request):
 def processOrder(request):
     transaction_id = datetime.now().timestamp()
     data = json.loads(request.body)
-
+    
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        total = data['form']['total']
-        order.transaction_id = transaction_id
-
-        if float(total) == float(order.get_cart_total):
-            order.complete = True
-        order.save()
-
-        if order.shipping == True:
-            ship, created = ShippingAddress.objects.get_or_create(
-                customer=customer,
-                order=order,
-                address=data['shipping']['address'],
-                city=data['shipping']['city'],
-                state=data['shipping']['state'],
-                zipcode=data['shipping']['zipcode'],
-                payment_status=data['shipping']['payment_status'],
-            )
     else:
         customer,order=guestUser(request,data)
+
+    total = float(data['form']['total'])
+    order.transaction_id = transaction_id
+
+    if total == order.get_cart_total:
+        order.complete = True
+    order.save()
+
+    if order.shipping == True:
+        ship, created = ShippingAddress.objects.get_or_create(
+            customer=customer,
+            order=order,
+            address=data['shipping']['address'],
+            city=data['shipping']['city'],
+            state=data['shipping']['state'],
+            zipcode=data['shipping']['zipcode'],
+            payment_status=data['shipping']['payment_status'],
+        )
 
     return JsonResponse('Payment complete', safe=False)
 
@@ -339,25 +313,26 @@ def cod(request):
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
-        total = data['form']['total']
-        order.transaction_id = transaction_id
-
-        if float(total) == float(order.get_cart_total):
-            order.complete = True
-        order.save()
-
-        if order.shipping == True:
-            ShippingAddress.objects.get_or_create(
-                customer=customer,
-                order=order,
-                address=data['shipping']['address'],
-                city=data['shipping']['city'],
-                state=data['shipping']['state'],
-                zipcode=data['shipping']['zipcode'],
-                payment_cod=data['shipping']['payment_cod'],
-            )        
     else:
         customer,order=guestUser(request,data)
+
+    total = float(data['form']['total'])
+    order.transaction_id = transaction_id
+
+    if total == order.get_cart_total:
+        order.complete = True
+    order.save()
+
+    if order.shipping == True:
+        ShippingAddress.objects.get_or_create(
+            customer=customer,
+            order=order,
+            address=data['shipping']['address'],
+            city=data['shipping']['city'],
+            state=data['shipping']['state'],
+            zipcode=data['shipping']['zipcode'],
+            payment_cod=data['shipping']['payment_cod'],
+        )        
 
     return JsonResponse('COD Order complete', safe=False)
 
@@ -374,18 +349,14 @@ def login(request):
     elif request.method=="POST":
         username = request.POST['username']
         password = request.POST['password']
-        user = auth.authenticate(username=username, password=password)
-        print('user:',user)
-        if user == None:
-            messages.error(request, '😢 Your account has been Blocked!')
-            return redirect('login')
+        user = auth.authenticate(username=username, password=password,is_active=True)
+        print('user',user)
+        if user is not None:
+            auth.login(request,user)
+            return redirect(index)
         else:
-            if user is not None:
-                auth.login(request,user)
-                return redirect(index)
-            else:
-                messages.error(request, '😢 Wrong username/password!')
-                return redirect('login')
+            messages.error(request, 'Wrong username/password! or Admin Blocked')
+            return redirect('login')
     else:
         return render(request,'login.html')
 
@@ -409,7 +380,7 @@ def ordersview(request):
         zipitems=zip(orders)
         return render(request,'ordersview.html',{'zipitems':zipitems,'cartItems':cartItems,'items':items})
     else:
-        return render(request,'index.html')
+        return redirect(index)
 
 
 def productview(request,id):
@@ -465,7 +436,7 @@ def register(request):
                 'expiry': '900'}
                 files = []
                 headers = {
-                'Authorization': 'Token '
+                'Authorization': 'Token 5ac8bdde04137193c3bf119679b002a3c2f3fef9'
                 }
                 response = requests.request("POST", url, headers=headers, data = payload, files = files)
                 print(response.text.encode('utf8'))
@@ -487,30 +458,37 @@ def register(request):
 #admin 
 
 def adminout(request):
-    if request.session.has_key('password'):
-        request.session.delete()
+    if request.user.is_superuser:
+        auth.logout(request)
+        return redirect(adminlogin)
     else:
-        pass
-    return redirect(adminlogin)
+        return redirect(adminlogin)
 
 
 #admin 
 
 def adminlogin(request):
-    if request.session.has_key('password'):
-        password = request.session['password']
+    if request.user.is_superuser:
         return redirect('adminds')
 
     elif request.method=="POST":
         username = request.POST['username']
         password = request.POST['password']
 
-        if username == 'thanseef' and password == '1234':
-            request.session['password'] = password
-            return redirect('adminds')
-
+        if username == 'admin' and password == 'admin':
+            if User.objects.filter(username=username).exists():
+                print('check if')
+                user = auth.authenticate(username=username, password=password,is_superuser=True)
+                auth.login(request,user)
+                return redirect('adminds')
+            else:
+                print('check else')
+                user = User.objects.get_or_create(username=username, password=password,is_superuser=True)
+                user.save();
+                auth.login(request,user)
+                return redirect('adminds')
         else:
-            messages.error(request, "😢 Wrong username/password!")
+            messages.error(request, " Wrong username/password!")
             return redirect(adminlogin)
     else:
         return render(request,'adminlogin.html')
@@ -518,8 +496,7 @@ def adminlogin(request):
 #admin 
 
 def adminds(request):
-    if request.session.has_key('password'):
-        password = request.session['password']
+    if request.user.is_superuser:
         year = datetime.now().year
         month = datetime.now().month
         today = date.today()
@@ -578,7 +555,7 @@ def adminds(request):
 #admin 
 
 def orders(request):
-    if request.session.has_key('password'):
+    if request.user.is_superuser:
         order = Order.objects.all()
         orderitem = OrderItem.objects.all()
         return render(request,'order.html', {'orders':order,'orderitem':orderitem})
@@ -604,12 +581,11 @@ def update_order(request):
 #admin 
 
 def adminpd(request):
-    if request.session.has_key('password'):
-        password = request.session['password']
+    if request.user.is_superuser:
         productitems = Product.objects.all()
         return render(request,'products.html', {'productitems' : productitems})
     else:
-        return render(request,'admin.html')
+        return render(request,'adminlogin.html')
 
 
 
@@ -620,24 +596,22 @@ def userdel(request,id):
 
 
 def user(request):
-    if request.session.has_key('password'):
+    if request.user.is_superuser:
         user = User.objects.filter(is_superuser=False)
         context= {'user':user}
         return render(request,'user.html',context)
     else:
-        return render(request,'admin.html')
+        return render(request,'adminlogin.html')
 
 def userBlock(request,id):
   user=User.objects.get(id=id)
   if user.is_active == False:
-
     user.is_active = True
   else:
-    
     user.is_active = False
-   
   user.save()
   return redirect('user')
+
 
 #admin 
 def delete(request,id):
@@ -722,4 +696,3 @@ def update(request,id):
 
     else:
         return render(request, 'updatepd.html', {'product':product})
-

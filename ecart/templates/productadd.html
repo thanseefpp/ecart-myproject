@@ -2,59 +2,7 @@
 
 {% block content %}
 {% load static %}
-                  <div class="main-content" id="panel">
-                    <!-- Topnav -->
-                    <nav class="navbar navbar-top navbar-expand navbar-dark bg-primary border-bottom">
-                      <div class="container-fluid">
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                          <!-- Search form -->
-                          <form class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
-                            <div class="form-group mb-0">
-                              <div class="input-group input-group-alternative input-group-merge">
-                                <div class="input-group-prepend">
-                                  <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                </div>
-                                <input class="form-control" placeholder="Search" type="text">
-                              </div>
-                            </div>
-                            <button type="button" class="close" data-action="search-close" data-target="#navbar-search-main"
-                              aria-label="Close">
-                              <!-- <span aria-hidden="true">×</span> -->
-                            </button>
-                          </form>
-                  
-                          <!-- Navbar links -->
-                          <ul class="navbar-nav align-items-center  ml-md-auto ">
-                  
-                          </ul>
-                  
-                          <ul class="navbar-nav align-items-center  ml-auto ml-md-0 ">
-                            <li class="nav-item dropdown">
-                              <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                                <div class="media align-items-center">
-                                  <span class="avatar avatar-sm rounded-circle">
-                                    <img alt="Image placeholder" src="{% static 'adassets/img/theme/team-4.jpg' %}">
-                                  </span>
-                                  <div class="media-body  ml-2  d-none d-lg-block">
-                                    <span class="mb-0 text-sm  font-weight-bold">Thanseef</span>
-                                  </div>
-                                </div>
-                              </a>
-                              <div class="dropdown-menu  dropdown-menu-right ">
-                  
-                                <div class="dropdown-divider"></div>
-                                <a href="{% url 'adminout' %}" class="dropdown-item">
-                                  <i class="ni ni-user-run"></i>
-                                  <span>Logout</span>
-                                </a>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </nav>
-                    <!-- Header -->
+               
                     <!-- Header -->
                     <div class="header bg-primary pb-6">
                       <div class="container-fluid">
@@ -150,30 +98,25 @@
             
                                     <main class="page">
                                         <label class="control-label" for="full_name">Product Photo</label>
-                                        <!-- input file -->
+                                       
                                         <div class="box">
                                             <input  type="file" id="file-input">
                                         </div>
-                                        <!-- leftbox -->
+                                        
                                         <div class="box-2">
                                             <div class="result"></div>
                                         </div>
-                                        <!--rightbox-->
+                                        
                                         <div class="box-2 img-result hide">
-                                            <!-- result of crop -->
+                                            
                                             <img id="cropped" class="cropped"  src="" alt="">
                                         </div>
-                                        <!-- input file -->
+                                        
                                         <div class="box">
                                             <div class="options hide">
-                                                <label> Width</label>
-                                                <input type="number" name="myfile" class="img-w" value="300" min="100" max="1200" />
+                                                <input type="number" name="myfile" class="img-w hidden" value="300" min="100" max="1200" />
                                             </div>
-                                            <!-- save btn -->
-                                            <button class="btn save hide">Confirm</button>
-                                            <!-- download btn -->
-                                            <a href="" id="" class="btn hidden"></a>
-                                            <button id="load" class="  btn btn primary" type="button" >Upload</button>
+                                            <button class="btn btn-info save hide" id="load" type="button">Confirm</button>    
                                         </div>
                                     </main>
 

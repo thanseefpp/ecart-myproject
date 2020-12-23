@@ -492,7 +492,8 @@ tempAlert("item added to cart",1000);
 function tempAlert(msg,duration)
 {
  var el = document.createElement("div");
- el.setAttribute("style","position:fixed;top:5%;left:88%;background-color:#D10024e6;width:12%;height:5%;text-align:center;color:white;padding-top:3px;" );
+ console.log('el',el);
+ el.setAttribute("style","position:fixed;top:25%;left:90%;background-color:#D10024e6;height:5%;text-align:center;color:white;padding-top:3px;" );
  el.innerHTML = msg;
  setTimeout(function(){
   el.parentNode.removeChild(el);

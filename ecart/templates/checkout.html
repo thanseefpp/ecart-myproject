@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 {% load static %}
 		<!-- BREADCRUMB -->
 		<div id="breadcrumb" class="section">
@@ -104,12 +105,23 @@
 									<div><strong>TOTAL</strong></div>
 								</div>
 								<div class="order-products">
-									{% for item in items %}
-									<div class="order-col">
-										<div>{{item.quantity}} x {{item.product.name}}</div>
-										<div>${{item.get_total}}</div>
-									</div>
-									{% endfor %}
+									{% if user.is_authenticated %}
+										{% for item in items %}
+										<div class="order-col">
+											<div>{{item.quantity}} x {{item.product.name}}</div>
+											<div>${{item.get_total}}</div>
+										</div>
+										{% endfor %}
+										{% else %}
+										{% for i in items %}
+										<div class="order-col">
+											<div>{{i.product.quantity}} x {{i.product.name}}</div>
+											<div>${{i.product.get_total}}</div>
+										</div>
+										{% endfor %}
+									{% endif %}
+									
+									
 								</div>
 								<div class="order-col">
 									<div>Shipping</div>
@@ -124,7 +136,6 @@
 							<div class="box-element hidden" id="payment-info">
 								<small>Paypal Options</small>
 								<div id="paypal-button-container"></div>
-								<!-- <button id="make-payment">Make payment</button> -->
 								<button id="rzp-button1" class="btn btn-success btn-block" style="background-color: #7f00bf; text-size-adjust: 2rem;">RazorPay</button>
 								<button id="cod" class="btn btn-success btn-block" style="background-color: #fc878d; text-size-adjust: 2rem;">Cash On Delivery</button>
 							</div>
@@ -150,8 +161,8 @@
 		
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-	var total ='{{order.get_cart_total}}'
-	var payment_raz='razorpay'
+	var total ='{{order.get_cart_total}}';
+	var payment_raz='razorpay';
 
 	var options = {
 		"key": "rzp_test_eMnSXZs7JW5fj7", // Enter the Key ID generated from the Dashboard
@@ -205,8 +216,7 @@
 			// Finalize the transaction
 			onApprove: function(data, actions) {
 				return actions.order.capture().then(function(details) {
-					// Show a success message to the buyer
-					// alert('Transaction completed by ' + details.payer.name.given_name + '!');
+
 					submitFormData(payment_paypal)
 				});
 			}
@@ -344,7 +354,7 @@
 	    	.then((response) => response.json())
 	    	.then((data) => {
 				console.log('Success:', data);
-				alert('Transaction completed');  
+				alert('Transaction completed');
 
 				cart = {}
 				document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
@@ -368,7 +378,6 @@
 
             $(dd).change(function () {
                 if (dd.checked == true) {
-                    console.log("error")
                     console.log(dd.name)
 
                     $.ajax({

@@ -62,7 +62,6 @@ class Product(models.Model):
         return self.name
 
 
-
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null =True, blank=True)
     name = models.CharField(max_length=200, null=True)
@@ -123,6 +122,7 @@ class ShippingAddress(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     payment_status = models.CharField(max_length=300, null=True)
     payment_cod = models.CharField(max_length=300, null=True)
+    
     def __str__(self):
         return self.address
 

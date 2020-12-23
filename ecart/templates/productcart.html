@@ -58,34 +58,33 @@
                             </td>
                             <td class="cart_price">
                                 <p>$<span id="prodprice{{item}}">{{item.product.newprice}}</span></p>
-                                
                             </td>
                             <td class="cart_quantity">
                                 <div class="cart_quantity_button">
-                                    {% if user.is_authenticated %}
+                                      {% if user.is_authenticated %}
                                       <button id="up" data-product={{item.product.id}}  data-action="add" onclick="window.myup('{{item}}')"  class="cart_quantity_up update-cart">+</button>
                                       <input style="text-align:center;"  id="qu{{item}}" class="test" value="{{item.quantity}}" >
-                                      <button data-product={{item.product.id}} data-action="remove"  onclick="window.mydown('{{item}}')" class="cart_quantity_down update-cart">-</button>
-                                    
+                                      <button data-product={{item.product.id}} data-action="remove"  onclick="window.mydown('{{item}}')" class="cart_quantity_down update-down-cart">-</button>
                                       {% else %}
-                                      <button data-product={{item.product.id}} data-action="add" class="cart_quantity_up update-cart"> + </button>
-                                      <input style="text-align:center;"  id="qu{{item}}" class="test" value="{{item.quantity}}" >
-                                      <button data-product={{item.product.id}} data-action="remove" class="cart_quantity_down update-cart" >-</button>
-                                    {%endif%}
-                                                                        
+                                      <button id="up" data-product={{item.product.id}}  data-action="add" onclick="window.myup('{{item}}')"  class="cart_quantity_up update-cart">+</button>
+                                      <input style="text-align:center;"  id="qu{{item}}" class="test" value="{{item.product.quantity}}" >
+                                      <button data-product={{item.product.id}} data-action="remove"  onclick="window.mydown('{{item}}')" class="cart_quantity_down update-down-cart">-</button>
+                                      {% endif %}
                                 </div>
                             </td>
                             <td class="cart_total">
+                              {% if user.is_authenticated %}
                                 <p class="cart_total_price">$<span id="totalprice{{item}}" class="cart_total_p">{{item.get_total}}</span></p>
-                            </td>
+                              {% else %}
+                              <p class="cart_total_price">$<span id="totalprice{{item}}" class="cart_total_p">{{item.product.get_total}}</span></p>
+                              {% endif %}
+                              </td>
                             <td class="cart_delete">
-                              <!-- <a data-product={{item.product.id}} data-name="{{item.product.name}}" data-action="delete" onclick="window.mycart()" id="checking" class="cart_quantity_down update-cart" href=""> X </a> -->
-                              <!-- <a data-product={{item.product.id}} data-name="{{item.product.name}}" data-action="delete" onclick="window.mycart('{{item}}')" id="checking-{{item}}" class="primary-btn fa fa-remove update-cart"></a> -->
-                              {%if user.is_authenticated %}
+                              {% if user.is_authenticated %}
                                 <a  data-product={{item.product.id}} data-name="{{item.product.name}}" onclick="window.mycart('{{item}}')" id="checking-{{item}}" data-action="delete" class="primary-btn update-cart" href=" "><i class="fa fa-times"></i></a>
                               {% else %}
                                 <a  data-product={{item.product.id}} data-name="{{item.product.name}}" onclick="window.mycart1()" id="checking" data-action="delete" class="primary-btn update-cart" href=" "><i class="fa fa-times"></i></a>
-                              {%endif%}
+                              {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
@@ -119,21 +118,16 @@
     // var totalprice=document.getElementById("totalprice"+item).textContent
     pri=parseFloat(price,10)
     value=pri * add
-    // alert("totsl"+pri +"*"+add+"="+value)
 
-
-    document.getElementById("qu"+item).value=add
+    document.getElementById("qu"+item).value=add;
     document.getElementById("totalprice"+item).innerHTML=value;
     var sumitem=0
     
-
     document.querySelectorAll('.test').forEach(ele=>{
-    console.log(ele.value);
-    
+    console.log('ele',ele.value);
     sumitem=sumitem + parseInt(ele.value) 
+    location.reload()
     
-
-
   })
   
   document.getElementById("total-items").innerHTML=sumitem
@@ -141,15 +135,10 @@
   document.querySelectorAll('.cart_total_p').forEach(ele=>{
     console.log("total",ele.textContent)
     sumtotal=sumtotal + parseFloat(ele.textContent) 
-    
-
-
 
   })
 
   document.getElementById("total-price").innerHTML=sumtotal
-  
-
 
   }
 
@@ -158,7 +147,7 @@
     if(add==1){
       location.reload()
     }
-           else{
+    else{
     add--
     var price=document.getElementById("prodprice"+item).textContent
     pri=parseFloat(price,10)
@@ -166,17 +155,14 @@
     document.getElementById("qu"+item).value=add
     document.getElementById("totalprice"+item).innerHTML=value;
 
-     }
-     var sumitem=0
-    
+    }
+    var sumitem=0
 
     document.querySelectorAll('.test').forEach(ele=>{
-    console.log(ele.value);
+    console.log('eletwo',ele.value);
     
     sumitem=sumitem + parseInt(ele.value) 
     
-
-
   })
   
     document.getElementById("total-items").innerHTML=sumitem
@@ -184,15 +170,10 @@
     document.querySelectorAll('.cart_total_p').forEach(ele=>{
     console.log("total",ele.textContent)
     sumtotal=sumtotal + parseFloat(ele.textContent) 
-    
-
-
 
   })
 
   document.getElementById("total-price").innerHTML=sumtotal
-
-    
 
   }
 
@@ -213,7 +194,6 @@
 }
 window.mycart1=function(){
     
-  
   var isValid =confirm("\t \tAre you sure !\n\n Do you want delete  ?");
   if(!isValid){
     
