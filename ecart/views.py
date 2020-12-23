@@ -475,15 +475,14 @@ def adminlogin(request):
         username = request.POST['username']
         password = request.POST['password']
 
-        if username == 'admin' and password == 'admin':
+        if username == 'admin' and password == '1234':
             if User.objects.filter(username=username).exists():
-                print('check if')
-                user = auth.authenticate(username=username, password=password,is_superuser=True)
-                auth.login(request,user)
+                user = User.objects.get(username=username)
+                auth.login(request,user,backend='django.contrib.auth.backends.ModelBackend')
                 return redirect('adminds')
             else:
                 print('check else')
-                user = User.objects.get_or_create(username=username, password=password,is_superuser=True)
+                user = User.objects.create(username=username, password=password,is_superuser=True)
                 user.save();
                 auth.login(request,user)
                 return redirect('adminds')
