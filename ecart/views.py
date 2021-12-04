@@ -17,7 +17,7 @@ from django.views.generic import View
 import razorpay
 import base64
 from PIL import Image
-from base64 import decodestring
+# from base64 import decodestring
 import binascii
 from django.core.files import File
 from django.core.files.base import ContentFile
