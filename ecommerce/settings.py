@@ -27,7 +27,7 @@ SECRET_KEY = '9w^h(lc**c!+bf9thcmdpz&-1a-w=*x!qhh-+zm8x*(obx3t4_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['azure.itechsolution.org']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -78,12 +78,8 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ecart',
-        'USER':'postgres',
-        'PASSWORD':'12345',
-        'HOST':'localhost',
-        # 'PORT':'5432'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
